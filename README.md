@@ -30,6 +30,8 @@
     1. 예약시스템이 과중 되면 사용자를 잠시동안 받지 않고 예약을 잠시후에 하도록 유도한다. Circuit breaker, fallback
 1. 성능
     1. 고객은 MyPage에서 본인 예매 상태를 확인 할 수 있어야 한다. (CQRS)
-    
 
+# 분석/설계
+## Event Storming 결과
+* MSAEz 로 모델링한 이벤트스토밍 결과:  http://www.msaez.io/#/storming/qLV82i54nWb4vM37CFUde5Jdpew2/mine/42d737bdb5439088560e23bbc2d7e5e7
 
