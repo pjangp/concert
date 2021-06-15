@@ -35,3 +35,9 @@
 ## Event Storming 결과
 * MSAEz 로 모델링한 이벤트스토밍 결과:  http://www.msaez.io/#/storming/qLV82i54nWb4vM37CFUde5Jdpew2/mine/42d737bdb5439088560e23bbc2d7e5e7
 
+### 액터, 커맨드 부착
+### 어그리게잇으로 묶기
+### 바운디드 컨텍스트로 묶기
+### 시나리오 요구사항 check
+## 헥사고날 아키텍처 다이어그램 도출
+
