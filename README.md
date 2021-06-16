@@ -61,6 +61,24 @@
 ## 헥사고날 아키텍처 다이어그램 도출
 <img width="100%" height="100%" alt="hex" src="https://user-images.githubusercontent.com/85874443/122163362-0944c580-ceb0-11eb-9316-3280f171995f.PNG">
 
+### 이벤트 도출
+![image](https://user-images.githubusercontent.com/85874443/122223814-8000b380-ceee-11eb-93a3-3c69d431226b.png)
+
+### 부적격 이벤트 제거
+![image](https://user-images.githubusercontent.com/85874443/122223889-8ee76600-ceee-11eb-9cd0-970c00b43cef.png)
+
+### 액터/커맨드 부착
+![image](https://user-images.githubusercontent.com/85874443/122223935-97d83780-ceee-11eb-9e5c-7b3cb1b13978.png)
+
+### 어그리게잇으로 묶기
+![image](https://user-images.githubusercontent.com/85874443/122223970-9f97dc00-ceee-11eb-8cd1-16ac65057044.png)
+
+### 바운디드 컨텍스트로 묶기
+![image](https://user-images.githubusercontent.com/85874443/122224015-a9b9da80-ceee-11eb-8118-9b10af5d378f.png)
+
+### 이벤트스토밍 최종 결과
+![image](https://user-images.githubusercontent.com/85874443/122227160-9ceab600-cef1-11eb-9dee-52b2f63dd9ac.png)
+
 
 
 # 구현:
