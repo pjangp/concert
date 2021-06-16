@@ -40,5 +40,5 @@
 ### 바운디드 컨텍스트로 묶기
 ### 시나리오 요구사항 check
 ## 헥사고날 아키텍처 다이어그램 도출
-<img width="586" alt="hex" src="https://user-images.githubusercontent.com/85874443/122163362-0944c580-ceb0-11eb-9316-3280f171995f.PNG">
+<img width="100%" height="100%" alt="hex" src="https://user-images.githubusercontent.com/85874443/122163362-0944c580-ceb0-11eb-9316-3280f171995f.PNG">
 
