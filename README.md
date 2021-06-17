@@ -56,7 +56,9 @@
 
 ### 바운디드 컨텍스트로 묶기
 <img width="100%" height="100%" alt="hex" src="https://user-images.githubusercontent.com/85874443/122169351-457c2400-ceb8-11eb-9183-411f29add7ba.PNG">
+
 ### 시나리오 요구사항 check
+<img width="100%" height="100%" alt="hex" src="https://user-images.githubusercontent.com/85874443/122320354-0fdd4680-cf5d-11eb-9ab2-1bfcf9ac89e9.PNG">
 
 ## 헥사고날 아키텍처 다이어그램 도출
 <img width="100%" height="100%" alt="hex" src="https://user-images.githubusercontent.com/85874443/122163362-0944c580-ceb0-11eb-9316-3280f171995f.PNG">
