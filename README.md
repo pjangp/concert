@@ -63,14 +63,15 @@
 ### 바운디드 컨텍스트로 묶기
 ![image](https://user-images.githubusercontent.com/85874443/122224015-a9b9da80-ceee-11eb-8118-9b10af5d378f.png)
 
+### 이벤트스토밍 최종 결과
+![image](https://user-images.githubusercontent.com/85874443/122227160-9ceab600-cef1-11eb-9dee-52b2f63dd9ac.png)
+
 ### 시나리오 요구사항 check
 <img width="100%" height="100%" alt="hex" src="https://user-images.githubusercontent.com/85874443/122320354-0fdd4680-cf5d-11eb-9ab2-1bfcf9ac89e9.PNG">
 
 ## 헥사고날 아키텍처 다이어그램 도출
 <img width="100%" height="100%" alt="hex" src="https://user-images.githubusercontent.com/85874443/122163362-0944c580-ceb0-11eb-9316-3280f171995f.PNG">
 
-### 이벤트스토밍 최종 결과
-![image](https://user-images.githubusercontent.com/85874443/122227160-9ceab600-cef1-11eb-9dee-52b2f63dd9ac.png)
 
 
 
