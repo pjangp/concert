@@ -174,7 +174,6 @@ mvn spring-boot:run
 
 
 - 적용 후 REST API 의 테스트
-```
 # gateway 서비스의 티켓등록
 ![gateway](https://user-images.githubusercontent.com/85874443/122735509-0f74e080-d2ba-11eb-84ef-6438b66c62f2.PNG)
 
@@ -188,8 +187,6 @@ mvn spring-boot:run
 
 # view 티켓예매 상태 확인
 http localhost:8086/views/1
-
-```
 
 
 ## Gateway 적용
