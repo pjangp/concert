@@ -636,11 +636,6 @@ $ tail -n 20 -f injection.log
 kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/download/v0.3.7/components.yaml
 kubectl get deployment metrics-server -n kube-system
 ```
-  
-- 현재상태 확인
-```sh
-$ kubectl get deploy complain -w -n conertbooking
-```
 
 - 예약 서비스에 리소스에 대한 사용량을 정의한다.
 
