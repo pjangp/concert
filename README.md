@@ -732,16 +732,14 @@ readinessProbe:
 - kubectl delete deploy --all
 - kubectl apply -f deployment.yml
 - kubectl apply -f service.yaml
-    - hpa 설정에 의해 target 지수 초과하여 booking scale-out 진행됨  
-        ![readiness-배포중](https://user-images.githubusercontent.com/18115456/120991348-7ecbda00-c7bc-11eb-8b4d-bdb6dacad1cf.png)
 
-    - booking이 배포되는 중,  
-    정상 실행중인 booking으로의 요청은 성공(201),  
-    배포중인 booking으로의 요청은 실패(503 - Service Unavailable) 확인
-        ![readiness2](https://user-images.githubusercontent.com/18115456/120987386-81c4cb80-c7b8-11eb-84e7-5c00a9b1a2ff.PNG)  
+- booking이 배포되는 중,  
+  ![update_version_80%](https://user-images.githubusercontent.com/85874443/122764789-c84b1780-d2da-11eb-951c-b6058f77b208.PNG)
+
 
 - 다시 readiness 정상 적용 후, Availability 100% 확인  
-  ![readiness4](https://user-images.githubusercontent.com/18115456/120987393-825d6200-c7b8-11eb-887e-d01519123d42.PNG)
+  ![update_version_100%](https://user-images.githubusercontent.com/85874443/122764804-ce40f880-d2da-11eb-83fa-af8a85d8431b.PNG)
+
 
     
 ## Self-healing (Liveness Probe)
