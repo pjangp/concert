@@ -181,68 +181,16 @@ mvn spring-boot:run
 |view| 콘서 예매내역 조회 |8086|http://localhost:8086/views|
 
 
-
-```
-package fooddelivery;
-
-import javax.persistence.*;
-import org.springframework.beans.BeanUtils;
-import java.util.List;
-
-@Entity
-@Table(name="결제이력_table")
-public class 결제이력 {
-
-    @Id
-    @GeneratedValue(strategy=GenerationType.AUTO)
-    private Long id;
-    private String orderId;
-    private Double 금액;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-    public String getOrderId() {
-        return orderId;
-    }
-
-    public void setOrderId(String orderId) {
-        this.orderId = orderId;
-    }
-    public Double get금액() {
-        return 금액;
-    }
-
-    public void set금액(Double 금액) {
-        this.금액 = 금액;
-    }
-
-}
-
-```
-- Entity Pattern 과 Repository Pattern 을 적용하여 JPA 를 통하여 다양한 데이터소스 유형 (RDB or NoSQL) 에 대한 별도의 처리가 없도록 데이터 접근 어댑터를 자동 생성하기 위하여 Spring Data REST 의 RestRepository 를 적용하였다
-```
-package fooddelivery;
-
-import org.springframework.data.repository.PagingAndSortingRepository;
-
-public interface 결제이력Repository extends PagingAndSortingRepository<결제이력, Long>{
-}
-```
 - 적용 후 REST API 의 테스트
 ```
-# app 서비스의 주문처리
-http localhost:8081/orders item="통닭"
+# concert 서비스의 티켓등록
+http localhost:8081/concerts item="통닭"
 
-# store 서비스의 배달처리
-http localhost:8083/주문처리s orderId=1
+# booking 서비스의 예매
+http localhost:8082/bookings orderId=1
 
-# 주문 상태 확인
-http localhost:8081/orders/1
+# view 티켓예매 상태 확인
+http localhost:8086/views/1
 
 ```
 
