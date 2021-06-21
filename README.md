@@ -152,6 +152,9 @@
 분석/설계 단계에서 도출된 헥사고날 아키텍처에 따라, 각 BC별로 대변되는 마이크로 서비스들을 스프링부트와 파이선으로 구현하였다. 구현한 각 서비스를 로컬에서 실행하는 방법은 아래와 같다 (각자의 포트넘버는 8081 ~ 808n 이다)
 
 ```
+cd view
+mvn spring-boot:run
+
 cd alarm
 mvn spring-boot:run
 
@@ -333,16 +336,16 @@ spring:
 server:
   port: 8080
 ```  
-mypage 서비스의 GateWay 적용
+view 서비스의 GateWay 적용
 
 
 ![image](https://user-images.githubusercontent.com/82795860/120988904-f0eeef80-c7b9-11eb-92e3-ed97ecc2b047.png)
 
 ## CQRS
 Materialized View 를 구현하여, 타 마이크로서비스의 데이터 원본에 접근없이(Composite 서비스나 조인SQL 등 없이) 도 내 서비스의 화면 구성과 잦은 조회가 가능하게 구현해 두었다.
-본 프로젝트에서 View 역할은 mypage 서비스가 수행한다.
+본 프로젝트에서 View 역할은 view 서비스가 수행한다.
 
-예약(Booked) 실행 후 myPage 화면
+예약(Booked) 실행 후 view 화면
  
 ![image](https://user-images.githubusercontent.com/82795860/121005958-526b8a00-c7cb-11eb-9bae-ad4bd70ef2eb.png)
 
@@ -356,10 +359,9 @@ mypage 서비스의 DB와 Booking/injection/vaccine 서비스의 DB를 다른 DB
 
 |서비스|DB|pom.xml|
 | :--: | :--: | :--: |
-|vaccine| H2 |![image](https://user-images.githubusercontent.com/2360083/121104579-4f10e680-c83d-11eb-8cf3-002c3d7ff8dc.png)|
+|concert| H2 |![image](https://user-images.githubusercontent.com/2360083/121104579-4f10e680-c83d-11eb-8cf3-002c3d7ff8dc.png)|
 |booking| H2 |![image](https://user-images.githubusercontent.com/2360083/121104579-4f10e680-c83d-11eb-8cf3-002c3d7ff8dc.png)|
-|injection| H2 |![image](https://user-images.githubusercontent.com/2360083/121104579-4f10e680-c83d-11eb-8cf3-002c3d7ff8dc.png)|
-|mypage| HSQL |![image](https://user-images.githubusercontent.com/2360083/120982836-1842be00-c7b4-11eb-91de-ab01170133fd.png)|
+|view| HSQL |![image](https://user-images.githubusercontent.com/2360083/120982836-1842be00-c7b4-11eb-91de-ab01170133fd.png)|
 
 <!-- 
 		<dependency>
@@ -378,30 +380,28 @@ mypage 서비스의 DB와 Booking/injection/vaccine 서비스의 DB를 다른 DB
 
 
 ## 동기식 호출과 Fallback 처리
-분석단계에서의 조건 중 하나로  접종 예약 수량은 백신 재고수량을 초과 할 수 없으며
-예약(Booking)->(Vaccine) 간의 호출은 동기식 일관성을 유지하는 트랜잭션으로 처리하기로 하였다. 
+분석단계에서의 조건 중 하나로  콘서트 티켓 예약수량은 등록된 티켓 수량을 초과 할 수 없으며
+예약(Booking)->콘서트(Concert) 간의 호출은 동기식 일관성을 유지하는 트랜잭션으로 처리하기로 하였다. 
 호출 프로토콜은 Rest Repository 에 의해 노출되어있는 REST 서비스를 FeignClient 를 이용하여 호출하도록 한다.
 
 
 
-Booking 서비스 내 external.VaccineService
+Booking  내 external.ConcertService
 
 ```java
-package anticorona.external;
+package concertbooking.external;
 
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.Date;
 
-@FeignClient(name="vaccine", url="http://${api.url.vaccine}:8080")
-public interface VaccineService {
+@FeignClient(name="Concert", url="http://localhost:8081")
+public interface ConcertService {
 
-    @RequestMapping(method= RequestMethod.GET, path="/vaccines/checkAndBookStock")
-    public boolean checkAndBookStock(@RequestParam Long vaccineId);
+    @RequestMapping(method= RequestMethod.GET, path="/checkAndBookStock")
+    public boolean checkAndBookStock(@RequestParam("ccId") Long ccId , @RequestParam("qty") int qty);
 
 }
 ```
@@ -410,70 +410,84 @@ Booking 서비스 내 Req/Resp
 
 ```java
     @PostPersist
-    public void onPostPersist() throws Exception {
-        if(BookingApplication.applicationContext.getBean(anticorona.external.VaccineService.class)
-            .checkAndBookStock(this.vaccineId)){
+    public void onPostPersist() throws Exception{
+        
+        
+        boolean rslt = BookingApplication.applicationContext.getBean(concertbooking.external.ConcertService.class)
+            .checkAndBookStock(this.getCcId(), this.getQty());
+
+            if (rslt) {
                 Booked booked = new Booked();
                 BeanUtils.copyProperties(this, booked);
                 booked.publishAfterCommit();
-            }
-        else{
-            throw new Exception("Out of Stock Exception Raised.");
-        }
+            }  
+            else{
+                throw new Exception("Out of Stock Exception Raised.");
+            }      
+        
 
     }
 ```
 
-Vaccine 서비스 내 Booking 서비스 Feign Client 요청 대상
+Concert 서비스 내 Booking 서비스 Feign Client 요청 대상
 
 ```java
- @RestController
- public class VaccineController {
+@RestController
+public class ConcertController {
 
-     @Autowired
-     VaccineRepository vaccineRepository;
+@Autowired
+ConcertRepository concertRepository;
 
-     @RequestMapping(value = "/vaccines/checkAndBookStock",
+@RequestMapping(value = "/checkAndBookStock",
         method = RequestMethod.GET,
         produces = "application/json;charset=UTF-8")
-    public boolean checkAndBookStock(HttpServletRequest request, HttpServletResponse response) {
-        System.out.println("##### /vaccine/checkAndBookStock  called #####");
+
+public boolean checkAndBookStock(HttpServletRequest request, HttpServletResponse response)
+        throws Exception {
+     
+        System.out.println("##### /concert/checkAndBookStock  called #####");
 
         boolean status = false;
-
-        Long vaccineId = Long.valueOf(request.getParameter("vaccineId"));
         
-        Optional<Vaccine> vaccine = vaccineRepository.findById(vaccineId);
-        if(vaccine.isPresent()){
-            Vaccine vaccineValue = vaccine.get();
-            //예약 가능한지 체크 
-            if(vaccineValue.getStock() - vaccineValue.getBookQty() > 0) {
-                //예약 가능하면 예약수량 증가
-                status = true;
-                vaccineValue.setBookQty(vaccineValue.getBookQty() + 1);
-                vaccineRepository.save(vaccineValue);
-            }
+        Long ccId = Long.valueOf(request.getParameter("ccId"));
+        int qty = Integer.parseInt(request.getParameter("qty"));
+
+        System.out.println("##### ccid #####" + ccId +"##### qty" + qty);
+        Optional<Concert> concert = concertRepository.findById(ccId);
+        
+        if(concert.isPresent()){
+
+                Concert concertValue = concert.get();
+
+                if (concertValue.getStock() >= qty) {
+                        concertValue.setStock(concertValue.getStock() - qty);
+                        concertRepository.save(concertValue);
+                        status = true;
+                        System.out.println("##### /concert/checkAndBookStock  qty check true ##### stock"+concertValue.getStock()+"### qty"+ qty);
+                }
+
+                System.out.println("##### /concert/checkAndBookStock  qty check false ##### stock"+concertValue.getStock()+"### qty"+ qty);
         }
 
         return status;
-     }
+        }
+        
  }
-
 ```
 
 동작 확인
 
-접종 예약하기 시도 시  백신의 재고 수량을 체크함
+티켓 예매하기 시도 시 티켓의 재고 수량을 체크함
 
 ![image](https://user-images.githubusercontent.com/82795860/120994076-1e8a6780-c7bf-11eb-8374-53f7a4336a1a.png)
 
 
-접종 예약 시 백신 재고수량을 초과하지 않으면 예약 가능
+티켓 예매 시 티켓의 재고수량을 초과하지 않으면 예매 가능
 
 ![image](https://user-images.githubusercontent.com/82795860/120997798-78406100-c7c2-11eb-90fa-b8ff71f53c77.png)
 
 
-접종 예약시 백신 재고수량을 초과하여 예약시 예약안됨
+티켓 예매시 티켓 재고수량을 초과할 경우 예매 안됨
 
 ![image](https://user-images.githubusercontent.com/82795860/120993294-5b099380-c7be-11eb-8970-b2b0e28d6e40.png)
 
@@ -482,7 +496,7 @@ Vaccine 서비스 내 Booking 서비스 Feign Client 요청 대상
 # 운영
 
 ## Deploy/ Pipeline
-각 구현체들은 각자의 source repository 에 구성되었고, 사용한 CI/CD 플랫폼은 AWS를 사용하였으며, pipeline build script 는 각 프로젝트 폴더 이하에 cloudbuild.yml 에 포함되었다.
+각 구현체들은 각자의 source repository 에 구성되었고, 사용한 CI/CD 플랫폼은 AWS를 사용하였으며, pipeline build script 는 각 프로젝트 폴더 이하에 deployment.yml, service.yml 에 포함되었다.
 
 - git에서 소스 가져오기
 
