@@ -178,7 +178,7 @@ mvn spring-boot:run
 | :--: | :--: | :--: | :--: |
 |concert| 티켓정보 관리 |8081|http://localhost:8081/concerts|
 |booking| 티켓예매 관리 |8082|http://localhost:8082/bookings|
-|view| 콘서 예매내역 조회 |8086|http://localhost:8086/views|
+|view| 콘서트 예매내역 조회 |8086|http://localhost:8086/views|
 
 
 - 적용 후 REST API 의 테스트
