@@ -760,7 +760,7 @@ livenessProbe:
 ```
 
 - port 및 path 잘못된 값으로 변경 후, retry 시도 확인 (in booking 서비스)  
-    - booking deploy yml 수정  
+    - booking 에 있는 deployment.yml 수정  
         ![selfhealing(liveness)-세팅변경](https://user-images.githubusercontent.com/18115456/120985806-ed0d9e00-c7b6-11eb-834f-ffd2c627ecf0.png)
 
     - retry 시도 확인  
