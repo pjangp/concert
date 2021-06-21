@@ -708,7 +708,7 @@ hystrix:
 
 - 부하 테스트 수행
 ```sh
-$ siege -c20 -t40S -v --content-type "application/json" 'http://localhost:8082/bookings POST {“ccId”:"1", "ccName":"mong", "ccDate:"20210621", “qty”:”2" ,”customerId”:"6007" ,"bookingStatus":"success"}'
+$ siege -c20 -t40S -v --content-type "application/json" 'http://localhost:8082/bookings POST {"ccId":1, "ccName":"mong", "ccDate":"20210621", "qty":2 ,"customerId":6007 ,"bookingStatus":"success"}'
 ```
 ![image](https://user-images.githubusercontent.com/82795806/120986972-1549cc80-c7b8-11eb-83e1-7bac5a0e80ed.png)
 
