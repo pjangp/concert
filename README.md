@@ -14,12 +14,12 @@
     - [비동기식 호출 과 Eventual Consistency](#비동기식-호출-과-Eventual-Consistency)
   - [운영](#운영)
     - [Deploy/ Pipeline](#Deploy-Pipeline)
-    - [Config Map](#Config Map)
-    - [Persistence Volume](#Persistence Volume)
-    - [Autoscale (HPA)](#Autoscale (HPA))
-    - [Circuit Breaker](#Circuit Breaker)
-    - [Zero-Downtime deploy (Readiness Probe)](#Zero-Downtime deploy (Readiness Probe))
-    - [Self-healing (Liveness Probe)](#Self-healing (Liveness Probe))
+    - [Config Map](#Config-Map)
+    - [Persistence Volume](#Persistence-Volume)
+    - [Autoscale (HPA)](#Autoscale-(HPA))
+    - [Circuit Breaker](#Circuit-Breaker)
+    - [Zero-Downtime deploy (Readiness Probe)](#Zero-Downtime-deploy-(Readiness-Probe))
+    - [Self-healing (Liveness Probe)](#Self-healing-(Liveness-Probe))
 
 # 서비스 시나리오
 
