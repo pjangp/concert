@@ -656,19 +656,16 @@ $ kubectl get deploy complain -w -n conertbooking
       cpu: "500m"
 ```
 
-- 예약 서비스에 대한 replica 를 동적으로 늘려주도록 HPA 를 설정한다. 설정은 CPU 사용량이 15프로를 넘어서면 replica 를 10개까지 늘려준다:
+- 예약 서비스에 대한 replica 를 동적으로 늘려주도록 HPA 를 설정한다. 설정은 CPU 사용량이 20프로를 넘어서면 replica 를 3개까지 늘려준다:
 
 ```sh
-$ kubectl autoscale deploy booking --min=1 --max=10 --cpu-percent=15
+$ kubectl autoscale deploy booking --min=1 --max=3 --cpu-percent=20
 ```
-
-![image](https://user-images.githubusercontent.com/82795806/120987663-c51f3a00-c7b8-11eb-8cc3-59d725ca2f69.png)
-
 
 - CB 에서 했던 방식대로 워크로드를 걸어준다.
 
 ```sh
-$ siege -c200 -t10S -v --content-type "application/json" 'http://booking:8080/bookings POST {"ccId":1, "ccName":"FIZER", "qty":5, "status":"BOOKED"}'
+siege -c20 -t40S -v --content-type "application/json" 'http://localhost:8082/bookings POST {“ccId”:"1", "ccName":"mong", "ccDate:"20210621", “qty”:”2" ,”customerId”:"6007" , "bookingStatus":"success"}'
 ```
 
 - 오토스케일이 어떻게 되고 있는지 모니터링을 걸어둔다:
@@ -679,16 +676,12 @@ $ kubectl get deploy booking -w
 
 - 어느정도 시간이 흐른 후 스케일 아웃이 벌어지는 것을 확인할 수 있다:
 
-* siege 부하테스트 - 전
+* siege 부하테스트 - 후 1
+![hpa](https://user-images.githubusercontent.com/85874443/122758180-76eb5a00-d2d3-11eb-9618-e2005145b0de.PNG)
 
-![image](https://user-images.githubusercontent.com/82795806/120990254-51caf780-c7bb-11eb-98a6-243b69344f12.png)
+* siege 부하테스트 - 후 2
+![scaleout_최종](https://user-images.githubusercontent.com/85874443/122758323-a13d1780-d2d3-11eb-8687-fc39ef7008a5.PNG)
 
-* siege 부하테스트 - 후
-
-![image](https://user-images.githubusercontent.com/82795806/120989337-66f35680-c7ba-11eb-9b4e-b1425d4a3c2f.png)
-
-
-- siege 의 로그를 보아도 전체적인 성공률이 높아진 것을 확인 할 수 있다. 
 
 ![image](https://user-images.githubusercontent.com/82795806/120990490-93f43900-c7bb-11eb-9295-c3a0a8165ff6.png)
 
