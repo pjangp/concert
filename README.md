@@ -193,65 +193,17 @@ API GateWay를 통하여 마이크로 서비스들의 진입점을 통일할 수
 다음과 같이 GateWay를 적용하였다.
 
 ```yaml
-server:
-  port: 8088
-
----
-
-spring:
-  profiles: default
-  cloud:
-    gateway:
-      routes:
-        - id: Concert
-          uri: http://localhost:8081
-          predicates:
-            - Path=/concerts/**, /check/**  
-        - id: Booking
-          uri: http://localhost:8082
-          predicates:
-            - Path=/bookings/** 
-        - id: Alarm
-          uri: http://localhost:8083
-          predicates:
-            - Path=/alarms/** 
-        - id: Delivery
-          uri: http://localhost:8084
-          predicates:
-            - Path=/deliveries/** 
-        - id: Payment
-          uri: http://localhost:8085
-          predicates:
-            - Path=/payments/** 
-        - id: View
-          uri: http://localhost:8086
-          predicates:
-            - Path= /mypages/**
-      globalcors:
-        corsConfigurations:
-          '[/**]':
-            allowedOrigins:
-              - "*"
-            allowedMethods:
-              - "*"
-            allowedHeaders:
-              - "*"
-            allowCredentials: true
-
-
----
-
 spring:
   profiles: docker
   cloud:
     gateway:
       routes:
-        - id: Concert
-          uri: http://Concert:8080
+        - id: concert
+          uri: http://concert:8080
           predicates:
-            - Path=/concerts/**, /check/**  
-        - id: Booking
-          uri: http://Booking:8080
+            - Path=/concerts/** , /checkAndBookStock/**
+        - id: booking
+          uri: http://booking:8080
           predicates:
             - Path=/bookings/** 
         - id: Alarm
@@ -270,19 +222,6 @@ spring:
           uri: http://View:8080
           predicates:
             - Path= /mypages/**
-      globalcors:
-        corsConfigurations:
-          '[/**]':
-            allowedOrigins:
-              - "*"
-            allowedMethods:
-              - "*"
-            allowedHeaders:
-              - "*"
-            allowCredentials: true
-
-server:
-  port: 8080
 ```  
 view 서비스의 GateWay 적용
 
