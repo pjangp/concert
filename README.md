@@ -244,28 +244,38 @@ API GateWay를 통하여 마이크로 서비스들의 진입점을 통일할 수
 ```yaml
 server:
   port: 8088
+
 ---
+
 spring:
   profiles: default
   cloud:
     gateway:
       routes:
-        - id: vaccine
+        - id: Concert
           uri: http://localhost:8081
           predicates:
-            - Path=/vaccines/** 
-        - id: booking
+            - Path=/concerts/**, /check/**  
+        - id: Booking
           uri: http://localhost:8082
           predicates:
             - Path=/bookings/** 
-        - id: mypage
+        - id: Alarm
           uri: http://localhost:8083
           predicates:
-            - Path= /mypages/**
-        - id: injection
+            - Path=/alarms/** 
+        - id: Delivery
           uri: http://localhost:8084
           predicates:
-            - Path=/injections/**,/cancellations/** 
+            - Path=/deliveries/** 
+        - id: Payment
+          uri: http://localhost:8085
+          predicates:
+            - Path=/payments/** 
+        - id: View
+          uri: http://localhost:8086
+          predicates:
+            - Path= /mypages/**
       globalcors:
         corsConfigurations:
           '[/**]':
@@ -276,6 +286,8 @@ spring:
             allowedHeaders:
               - "*"
             allowCredentials: true
+
+
 ---
 
 spring:
@@ -283,22 +295,30 @@ spring:
   cloud:
     gateway:
       routes:
-        - id: vaccine
-          uri: http://vaccine:8080
+        - id: Concert
+          uri: http://Concert:8080
           predicates:
-            - Path=/vaccines/** 
-        - id: booking
-          uri: http://booking:8080
+            - Path=/concerts/**, /check/**  
+        - id: Booking
+          uri: http://Booking:8080
           predicates:
             - Path=/bookings/** 
-        - id: mypage
-          uri: http://mypage:8080
+        - id: Alarm
+          uri: http://Alarm:8080
+          predicates:
+            - Path=/alarms/** 
+        - id: Delivery
+          uri: http://Delivery:8080
+          predicates:
+            - Path=/deliveries/** 
+        - id: Payment
+          uri: http://Payment:8080
+          predicates:
+            - Path=/payments/** 
+        - id: View
+          uri: http://View:8080
           predicates:
             - Path= /mypages/**
-        - id: injection
-          uri: http://injection:8080
-          predicates:
-            - Path=/injections/**,/cancellations/** 
       globalcors:
         corsConfigurations:
           '[/**]':
@@ -311,7 +331,7 @@ spring:
             allowCredentials: true
 
 server:
-  port: 8080 
+  port: 8080
 ```  
 mypage 서비스의 GateWay 적용
 
@@ -462,12 +482,12 @@ Vaccine 서비스 내 Booking 서비스 Feign Client 요청 대상
 # 운영
 
 ## Deploy/ Pipeline
-각 구현체들은 각자의 source repository 에 구성되었고, 사용한 CI/CD 플랫폼은 Azure를 사용하였으며, pipeline build script 는 각 프로젝트 폴더 이하에 cloudbuild.yml 에 포함되었다.
+각 구현체들은 각자의 source repository 에 구성되었고, 사용한 CI/CD 플랫폼은 AWS를 사용하였으며, pipeline build script 는 각 프로젝트 폴더 이하에 cloudbuild.yml 에 포함되었다.
 
 - git에서 소스 가져오기
 
 ```
-git clone --recurse-submodules https://github.com/skteam4/concert.git
+git clone --recurse-submodules https://github.com/skteam4/concert/concertbooking.git
 ```
 
 - Build 하기
@@ -714,6 +734,10 @@ $ tail -n 20 -f injection.log
 ## Autoscale (HPA)
 
   앞서 CB 는 시스템을 안정되게 운영할 수 있게 해줬지만 사용자의 요청을 100% 받아들여주지 못했기 때문에 이에 대한 보완책으로 자동화된 확장 기능을 적용하고자 한다. 
+  
+- 현재상태 확인
+```sh
+$ kubectl get deploy complain -w -n conertbooking
 
 - 예약 서비스에 리소스에 대한 사용량을 정의한다.
 
@@ -741,13 +765,13 @@ $ kubectl autoscale deploy booking --min=1 --max=10 --cpu-percent=15
 - CB 에서 했던 방식대로 워크로드를 걸어준다.
 
 ```sh
-$ siege -c200 -t10S -v --content-type "application/json" 'http://booking:8080/bookings POST {"vaccineId":1, "vcName":"FIZER", "userId":5, "status":"BOOKED"}'
+$ siege -c200 -t10S -v --content-type "application/json" 'http://booking:8080/bookings POST {"ccId":1, "ccName":"FIZER", "qty":5, "status":"BOOKED"}'
 ```
 
 - 오토스케일이 어떻게 되고 있는지 모니터링을 걸어둔다:
 
 ```sh
-$ watch kubectl get all
+$ kubectl get deploy booking -w
 ```
 
 - 어느정도 시간이 흐른 후 스케일 아웃이 벌어지는 것을 확인할 수 있다:
@@ -767,9 +791,9 @@ $ watch kubectl get all
 
 ## Circuit Breaker
 
-  * 서킷 브레이킹 프레임워크의 선택: Spring FeignClient + Istio를 설치하여, anticorona namespace에 주입하여 구현함
+  * 서킷 브레이킹 프레임워크의 선택: Spring FeignClient + Istio를 설치하여, concertbooking namespace에 주입하여 구현함
 
-시나리오는 예약(booking)-->백신(vaccine) 연결을 RESTful Request/Response 로 연동하여 구현이 되어있고, 예약 요청이 과도할 경우 CB 를 통하여 장애격리.
+시나리오는 예약(booking)-->콘서트(concert) 연결을 RESTful Request/Response 로 연동하여 구현이 되어있고, 예약 요청이 과도할 경우 CB 를 통하여 장애격리.
 
 - Istio 다운로드 및 PATH 추가, 설치, namespace에 istio주입
 
@@ -853,7 +877,10 @@ readinessProbe:
   failureThreshold: 10
 ```
 
-- deployment.yml에서 readiness 설정 제거 후, 배포중 siege 테스트 진행  
+- deployment.yml에서 readiness 설정 제거 후, 배포중 siege 테스트 진행
+- kubectl delete deploy --all
+- kubectl apply -f deployment.yml
+- kubectl apply -f service.yaml
     - hpa 설정에 의해 target 지수 초과하여 booking scale-out 진행됨  
         ![readiness-배포중](https://user-images.githubusercontent.com/18115456/120991348-7ecbda00-c7bc-11eb-8b4d-bdb6dacad1cf.png)
 
