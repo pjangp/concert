@@ -741,7 +741,7 @@ readinessProbe:
         ![readiness2](https://user-images.githubusercontent.com/18115456/120987386-81c4cb80-c7b8-11eb-84e7-5c00a9b1a2ff.PNG)  
 
 - 다시 readiness 정상 적용 후, Availability 100% 확인  
-![readiness4](https://user-images.githubusercontent.com/18115456/120987393-825d6200-c7b8-11eb-887e-d01519123d42.PNG)
+  ![readiness4](https://user-images.githubusercontent.com/18115456/120987393-825d6200-c7b8-11eb-887e-d01519123d42.PNG)
 
     
 ## Self-healing (Liveness Probe)
