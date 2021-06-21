@@ -155,20 +155,12 @@
 cd view
 mvn spring-boot:run
 
-cd alarm
-mvn spring-boot:run
-
 cd booking
 mvn spring-boot:run 
 
 cd concert
 mvn spring-boot:run  
 
-cd delivery
-mvn spring-boot:run  
-
-cd payment
-mvn spring-boot:run  
 ```
 
 ## DDD 의 적용
@@ -183,11 +175,16 @@ mvn spring-boot:run
 
 - 적용 후 REST API 의 테스트
 ```
+# gateway 서비스의 티켓등록
+![gateway](https://user-images.githubusercontent.com/85874443/122735509-0f74e080-d2ba-11eb-84ef-6438b66c62f2.PNG)
+
+
 # concert 서비스의 티켓등록
-http localhost:8081/concerts item="통닭"
+![concert](https://user-images.githubusercontent.com/85874443/122735425-fc621080-d2b9-11eb-89a8-bb5f727ee13a.PNG)
+
 
 # booking 서비스의 예매
-http localhost:8082/bookings orderId=1
+![booking](https://user-images.githubusercontent.com/85874443/122735451-0257f180-d2ba-11eb-9194-a871828eb95b.PNG)
 
 # view 티켓예매 상태 확인
 http localhost:8086/views/1
