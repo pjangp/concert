@@ -8,10 +8,10 @@
   - [분석/설계](#분석설계)
   - [구현:](#구현-)
     - [DDD 의 적용](#ddd-의-적용)
+    - [Gateway 적용](#Gateway-적용)
+    - [CQRS](#CQRS)
     - [폴리글랏 퍼시스턴스](#폴리글랏-퍼시스턴스)
-    - [폴리글랏 프로그래밍](#폴리글랏-프로그래밍)
-    - [동기식 호출 과 Fallback 처리](#동기식-호출-과-Fallback-처리)
-    - [비동기식 호출 과 Eventual Consistency](#비동기식-호출-과-Eventual-Consistency)
+    - [동기식 호출과 Fallback 처리](#동기식-호출과-Fallback-처리)
   - [운영](#운영)
     - [Deploy/ Pipeline](#Deploy/Pipeline)
     - [Config Map](#Config-Map)
@@ -237,218 +237,210 @@ http localhost:8081/orders/1
 ```
 
 
+## Gateway 적용
+API GateWay를 통하여 마이크로 서비스들의 진입점을 통일할 수 있다. 
+다음과 같이 GateWay를 적용하였다.
+
+```yaml
+server:
+  port: 8088
+---
+spring:
+  profiles: default
+  cloud:
+    gateway:
+      routes:
+        - id: vaccine
+          uri: http://localhost:8081
+          predicates:
+            - Path=/vaccines/** 
+        - id: booking
+          uri: http://localhost:8082
+          predicates:
+            - Path=/bookings/** 
+        - id: mypage
+          uri: http://localhost:8083
+          predicates:
+            - Path= /mypages/**
+        - id: injection
+          uri: http://localhost:8084
+          predicates:
+            - Path=/injections/**,/cancellations/** 
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins:
+              - "*"
+            allowedMethods:
+              - "*"
+            allowedHeaders:
+              - "*"
+            allowCredentials: true
+---
+
+spring:
+  profiles: docker
+  cloud:
+    gateway:
+      routes:
+        - id: vaccine
+          uri: http://vaccine:8080
+          predicates:
+            - Path=/vaccines/** 
+        - id: booking
+          uri: http://booking:8080
+          predicates:
+            - Path=/bookings/** 
+        - id: mypage
+          uri: http://mypage:8080
+          predicates:
+            - Path= /mypages/**
+        - id: injection
+          uri: http://injection:8080
+          predicates:
+            - Path=/injections/**,/cancellations/** 
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins:
+              - "*"
+            allowedMethods:
+              - "*"
+            allowedHeaders:
+              - "*"
+            allowCredentials: true
+
+server:
+  port: 8080 
+```  
+mypage 서비스의 GateWay 적용
+
+
+![image](https://user-images.githubusercontent.com/82795860/120988904-f0eeef80-c7b9-11eb-92e3-ed97ecc2b047.png)
+
+## CQRS
+Materialized View 를 구현하여, 타 마이크로서비스의 데이터 원본에 접근없이(Composite 서비스나 조인SQL 등 없이) 도 내 서비스의 화면 구성과 잦은 조회가 가능하게 구현해 두었다.
+본 프로젝트에서 View 역할은 mypage 서비스가 수행한다.
+
+예약(Booked) 실행 후 myPage 화면
+ 
+![image](https://user-images.githubusercontent.com/82795860/121005958-526b8a00-c7cb-11eb-9bae-ad4bd70ef2eb.png)
+
+
+
+![image](https://user-images.githubusercontent.com/82795860/121006311-bb530200-c7cb-11eb-9d85-a7b22d1a2729.png)
+  
 ## 폴리글랏 퍼시스턴스
+mypage 서비스의 DB와 Booking/injection/vaccine 서비스의 DB를 다른 DB를 사용하여 MSA간 서로 다른 종류의 DB간에도 문제 없이 동작하여 다형성을 만족하는지 확인하였다.
+(폴리글랏을 만족)
 
-앱프런트 (app) 는 서비스 특성상 많은 사용자의 유입과 상품 정보의 다양한 콘텐츠를 저장해야 하는 특징으로 인해 RDB 보다는 Document DB / NoSQL 계열의 데이터베이스인 Mongo DB 를 사용하기로 하였다. 이를 위해 order 의 선언에는 @Entity 가 아닌 @Document 로 마킹되었으며, 별다른 작업없이 기존의 Entity Pattern 과 Repository Pattern 적용과 데이터베이스 제품의 설정 (application.yml) 만으로 MongoDB 에 부착시켰다
+|서비스|DB|pom.xml|
+| :--: | :--: | :--: |
+|vaccine| H2 |![image](https://user-images.githubusercontent.com/2360083/121104579-4f10e680-c83d-11eb-8cf3-002c3d7ff8dc.png)|
+|booking| H2 |![image](https://user-images.githubusercontent.com/2360083/121104579-4f10e680-c83d-11eb-8cf3-002c3d7ff8dc.png)|
+|injection| H2 |![image](https://user-images.githubusercontent.com/2360083/121104579-4f10e680-c83d-11eb-8cf3-002c3d7ff8dc.png)|
+|mypage| HSQL |![image](https://user-images.githubusercontent.com/2360083/120982836-1842be00-c7b4-11eb-91de-ab01170133fd.png)|
 
-```
-# Order.java
-
-package fooddelivery;
-
-@Document
-public class Order {
-
-    private String id; // mongo db 적용시엔 id 는 고정값으로 key가 자동 발급되는 필드기 때문에 @Id 나 @GeneratedValue 를 주지 않아도 된다.
-    private String item;
-    private Integer 수량;
-
-}
+## 동기식 호출과 Fallback 처리
+분석단계에서의 조건 중 하나로  접종 예약 수량은 백신 재고수량을 초과 할 수 없으며
+예약(Booking)->(Vaccine) 간의 호출은 동기식 일관성을 유지하는 트랜잭션으로 처리하기로 하였다. 
+호출 프로토콜은 Rest Repository 에 의해 노출되어있는 REST 서비스를 FeignClient 를 이용하여 호출하도록 한다.
 
 
-# 주문Repository.java
-package fooddelivery;
 
-public interface 주문Repository extends JpaRepository<Order, UUID>{
-}
+Booking 서비스 내 external.VaccineService
 
-# application.yml
+```java
+package anticorona.external;
 
-  data:
-    mongodb:
-      host: mongodb.default.svc.cluster.local
-    database: mongo-example
+import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
-```
+import java.util.Date;
 
-## 폴리글랏 프로그래밍
+@FeignClient(name="vaccine", url="http://${api.url.vaccine}:8080")
+public interface VaccineService {
 
-고객관리 서비스(customer)의 시나리오인 주문상태, 배달상태 변경에 따라 고객에게 카톡메시지 보내는 기능의 구현 파트는 해당 팀이 python 을 이용하여 구현하기로 하였다. 해당 파이썬 구현체는 각 이벤트를 수신하여 처리하는 Kafka consumer 로 구현되었고 코드는 다음과 같다:
-```
-from flask import Flask
-from redis import Redis, RedisError
-from kafka import KafkaConsumer
-import os
-import socket
-
-
-# To consume latest messages and auto-commit offsets
-consumer = KafkaConsumer('fooddelivery',
-                         group_id='',
-                         bootstrap_servers=['localhost:9092'])
-for message in consumer:
-    print ("%s:%d:%d: key=%s value=%s" % (message.topic, message.partition,
-                                          message.offset, message.key,
-                                          message.value))
-
-    # 카톡호출 API
-```
-
-파이선 애플리케이션을 컴파일하고 실행하기 위한 도커파일은 아래와 같다 (운영단계에서 할일인가? 아니다 여기 까지가 개발자가 할일이다. Immutable Image):
-```
-FROM python:2.7-slim
-WORKDIR /app
-ADD . /app
-RUN pip install --trusted-host pypi.python.org -r requirements.txt
-ENV NAME World
-EXPOSE 8090
-CMD ["python", "policy-handler.py"]
-```
-
-
-## 동기식 호출 과 Fallback 처리
-
-분석단계에서의 조건 중 하나로 주문(app)->결제(pay) 간의 호출은 동기식 일관성을 유지하는 트랜잭션으로 처리하기로 하였다. 호출 프로토콜은 이미 앞서 Rest Repository 에 의해 노출되어있는 REST 서비스를 FeignClient 를 이용하여 호출하도록 한다. 
-
-- 결제서비스를 호출하기 위하여 Stub과 (FeignClient) 를 이용하여 Service 대행 인터페이스 (Proxy) 를 구현 
-
-```
-# (app) 결제이력Service.java
-
-package fooddelivery.external;
-
-@FeignClient(name="pay", url="http://localhost:8082")//, fallback = 결제이력ServiceFallback.class)
-public interface 결제이력Service {
-
-    @RequestMapping(method= RequestMethod.POST, path="/결제이력s")
-    public void 결제(@RequestBody 결제이력 pay);
+    @RequestMapping(method= RequestMethod.GET, path="/vaccines/checkAndBookStock")
+    public boolean checkAndBookStock(@RequestParam Long vaccineId);
 
 }
 ```
 
-- 주문을 받은 직후(@PostPersist) 결제를 요청하도록 처리
-```
-# Order.java (Entity)
+Booking 서비스 내 Req/Resp
 
+```java
     @PostPersist
-    public void onPostPersist(){
-
-        fooddelivery.external.결제이력 pay = new fooddelivery.external.결제이력();
-        pay.setOrderId(getOrderId());
-        
-        Application.applicationContext.getBean(fooddelivery.external.결제이력Service.class)
-                .결제(pay);
-    }
-```
-
-- 동기식 호출에서는 호출 시간에 따른 타임 커플링이 발생하며, 결제 시스템이 장애가 나면 주문도 못받는다는 것을 확인:
-
-
-```
-# 결제 (pay) 서비스를 잠시 내려놓음 (ctrl+c)
-
-#주문처리
-http localhost:8081/orders item=통닭 storeId=1   #Fail
-http localhost:8081/orders item=피자 storeId=2   #Fail
-
-#결제서비스 재기동
-cd 결제
-mvn spring-boot:run
-
-#주문처리
-http localhost:8081/orders item=통닭 storeId=1   #Success
-http localhost:8081/orders item=피자 storeId=2   #Success
-```
-
-- 또한 과도한 요청시에 서비스 장애가 도미노 처럼 벌어질 수 있다. (서킷브레이커, 폴백 처리는 운영단계에서 설명한다.)
-
-
-
-
-## 비동기식 호출 / 시간적 디커플링 / 장애격리 / 최종 (Eventual) 일관성 테스트
-
-
-결제가 이루어진 후에 상점시스템으로 이를 알려주는 행위는 동기식이 아니라 비 동기식으로 처리하여 상점 시스템의 처리를 위하여 결제주문이 블로킹 되지 않아도록 처리한다.
- 
-- 이를 위하여 결제이력에 기록을 남긴 후에 곧바로 결제승인이 되었다는 도메인 이벤트를 카프카로 송출한다(Publish)
- 
-```
-package fooddelivery;
-
-@Entity
-@Table(name="결제이력_table")
-public class 결제이력 {
-
- ...
-    @PrePersist
-    public void onPrePersist(){
-        결제승인됨 결제승인됨 = new 결제승인됨();
-        BeanUtils.copyProperties(this, 결제승인됨);
-        결제승인됨.publish();
-    }
-
-}
-```
-- 상점 서비스에서는 결제승인 이벤트에 대해서 이를 수신하여 자신의 정책을 처리하도록 PolicyHandler 를 구현한다:
-
-```
-package fooddelivery;
-
-...
-
-@Service
-public class PolicyHandler{
-
-    @StreamListener(KafkaProcessor.INPUT)
-    public void whenever결제승인됨_주문정보받음(@Payload 결제승인됨 결제승인됨){
-
-        if(결제승인됨.isMe()){
-            System.out.println("##### listener 주문정보받음 : " + 결제승인됨.toJson());
-            // 주문 정보를 받았으니, 요리를 슬슬 시작해야지..
-            
+    public void onPostPersist() throws Exception {
+        if(BookingApplication.applicationContext.getBean(anticorona.external.VaccineService.class)
+            .checkAndBookStock(this.vaccineId)){
+                Booked booked = new Booked();
+                BeanUtils.copyProperties(this, booked);
+                booked.publishAfterCommit();
+            }
+        else{
+            throw new Exception("Out of Stock Exception Raised.");
         }
+
     }
-
-}
-
-```
-실제 구현을 하자면, 카톡 등으로 점주는 노티를 받고, 요리를 마친후, 주문 상태를 UI에 입력할테니, 우선 주문정보를 DB에 받아놓은 후, 이후 처리는 해당 Aggregate 내에서 하면 되겠다.:
-  
-```
-  @Autowired 주문관리Repository 주문관리Repository;
-  
-  @StreamListener(KafkaProcessor.INPUT)
-  public void whenever결제승인됨_주문정보받음(@Payload 결제승인됨 결제승인됨){
-
-      if(결제승인됨.isMe()){
-          카톡전송(" 주문이 왔어요! : " + 결제승인됨.toString(), 주문.getStoreId());
-
-          주문관리 주문 = new 주문관리();
-          주문.setId(결제승인됨.getOrderId());
-          주문관리Repository.save(주문);
-      }
-  }
-
 ```
 
-상점 시스템은 주문/결제와 완전히 분리되어있으며, 이벤트 수신에 따라 처리되기 때문에, 상점시스템이 유지보수로 인해 잠시 내려간 상태라도 주문을 받는데 문제가 없다:
+Vaccine 서비스 내 Booking 서비스 Feign Client 요청 대상
+
+```java
+ @RestController
+ public class VaccineController {
+
+     @Autowired
+     VaccineRepository vaccineRepository;
+
+     @RequestMapping(value = "/vaccines/checkAndBookStock",
+        method = RequestMethod.GET,
+        produces = "application/json;charset=UTF-8")
+    public boolean checkAndBookStock(HttpServletRequest request, HttpServletResponse response) {
+        System.out.println("##### /vaccine/checkAndBookStock  called #####");
+
+        boolean status = false;
+
+        Long vaccineId = Long.valueOf(request.getParameter("vaccineId"));
+        
+        Optional<Vaccine> vaccine = vaccineRepository.findById(vaccineId);
+        if(vaccine.isPresent()){
+            Vaccine vaccineValue = vaccine.get();
+            //예약 가능한지 체크 
+            if(vaccineValue.getStock() - vaccineValue.getBookQty() > 0) {
+                //예약 가능하면 예약수량 증가
+                status = true;
+                vaccineValue.setBookQty(vaccineValue.getBookQty() + 1);
+                vaccineRepository.save(vaccineValue);
+            }
+        }
+
+        return status;
+     }
+ }
+
 ```
-# 상점 서비스 (store) 를 잠시 내려놓음 (ctrl+c)
 
-#주문처리
-http localhost:8081/orders item=통닭 storeId=1   #Success
-http localhost:8081/orders item=피자 storeId=2   #Success
+동작 확인
 
-#주문상태 확인
-http localhost:8080/orders     # 주문상태 안바뀜 확인
+접종 예약하기 시도 시  백신의 재고 수량을 체크함
 
-#상점 서비스 기동
-cd 상점
-mvn spring-boot:run
+![image](https://user-images.githubusercontent.com/82795860/120994076-1e8a6780-c7bf-11eb-8374-53f7a4336a1a.png)
 
-#주문상태 확인
-http localhost:8080/orders     # 모든 주문의 상태가 "배송됨"으로 확인
-```
+
+접종 예약 시 백신 재고수량을 초과하지 않으면 예약 가능
+
+![image](https://user-images.githubusercontent.com/82795860/120997798-78406100-c7c2-11eb-90fa-b8ff71f53c77.png)
+
+
+접종 예약시 백신 재고수량을 초과하여 예약시 예약안됨
+
+![image](https://user-images.githubusercontent.com/82795860/120993294-5b099380-c7be-11eb-8970-b2b0e28d6e40.png)
+
 
 
 # 운영
