@@ -694,7 +694,16 @@ $ kubectl get deploy booking -w
   * Hystrix 설정
 
 ```yml
-야믈 설정
+# application.yml
+
+feign:
+  hystrix:
+    enabled: true
+
+hystrix:
+  command:
+    default:
+      execution.isolation.thread.timeoutInMilliseconds: 610
 ```
 
 - 부하 테스트 수행
