@@ -14,10 +14,12 @@
     - [비동기식 호출 과 Eventual Consistency](#비동기식-호출-과-Eventual-Consistency)
   - [운영](#운영)
     - [Deploy/ Pipeline](#Deploy-Pipeline)
-    - [동기식 호출 / 서킷 브레이킹 / 장애격리](#동기식-호출-서킷-브레이킹-장애격리)
-    - [오토스케일 아웃](#오토스케일-아웃)
-    - [무정지 재배포](#무정지-재배포)
-  - [신규 개발 조직의 추가](#신규-개발-조직의-추가)
+    - [Config Map](#Config Map)
+    - [Persistence Volume](#Persistence Volume)
+    - [Autoscale (HPA)](#Autoscale (HPA))
+    - [Circuit Breaker](#Circuit Breaker)
+    - [Zero-Downtime deploy (Readiness Probe)](#Zero-Downtime deploy (Readiness Probe))
+    - [Self-healing (Liveness Probe)](#Self-healing (Liveness Probe))
 
 # 서비스 시나리오
 
