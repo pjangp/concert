@@ -672,13 +672,15 @@ $ kubectl get deploy booking -w
 - 어느정도 시간이 흐른 후 스케일 아웃이 벌어지는 것을 확인할 수 있다:
 
 * siege 부하테스트 - 후 1
+
 ![hpa](https://user-images.githubusercontent.com/85874443/122758180-76eb5a00-d2d3-11eb-9618-e2005145b0de.PNG)
 
+
 * siege 부하테스트 - 후 2
+
+
 ![scaleout_최종](https://user-images.githubusercontent.com/85874443/122758323-a13d1780-d2d3-11eb-8687-fc39ef7008a5.PNG)
 
-
-![image](https://user-images.githubusercontent.com/82795806/120990490-93f43900-c7bb-11eb-9295-c3a0a8165ff6.png)
 
 ## Circuit Breaker
 
