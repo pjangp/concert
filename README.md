@@ -173,23 +173,22 @@ mvn spring-boot:run
 |view| 콘서트 예매내역 조회 |8086|http://localhost:8086/views|
 
 
-- 적용 후 REST API 의 테스트
-# gateway 서비스의 티켓등록
+- AWS에 gateway 등록
 ![gateway](https://user-images.githubusercontent.com/85874443/122735509-0f74e080-d2ba-11eb-84ef-6438b66c62f2.PNG)
 
 
-# concert 서비스의 티켓등록
+- concert 서비스의 티켓등록
 ![concert](https://user-images.githubusercontent.com/85874443/122735425-fc621080-d2b9-11eb-89a8-bb5f727ee13a.PNG)
 
 
-# booking 서비스의 예매
+- booking 서비스의 예매
 ![booking](https://user-images.githubusercontent.com/85874443/122735451-0257f180-d2ba-11eb-9194-a871828eb95b.PNG)
 
-# view 티켓예매 상태 확인
+- view 티켓예매 상태 확인
 http localhost:8086/views/1
 
 
-## Gateway 적용
+Gateway 적용
 API GateWay를 통하여 마이크로 서비스들의 진입점을 통일할 수 있다. 
 다음과 같이 GateWay를 적용하였다.
 
