@@ -19,7 +19,7 @@
     - [Autoscale(HPA)](#Autoscale)
     - [Circuit Breaker](#Circuit-Breaker)
     - [Zero-Downtime deploy(Readiness Probe)](#Zero-Downtime-deploy(Readiness-Probe))
-    - [Self-healing(Liveness Probe)](#Self-healing(Liveness-Probe))
+    - [Self-healing(Liveness Probe)](#Self-healing)
 
 # 서비스 시나리오
 
