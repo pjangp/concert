@@ -16,7 +16,7 @@
     - [Deploy/Pipeline](#Deploy-Pipeline)
     - [Config Map](#Config-Map)
     - [Persistence Volume](#Persistence-Volume)
-    - [Autoscale(HPA)](#Autoscale(HPA))
+    - [Autoscale(HPA)](#Autoscale)
     - [Circuit Breaker](#Circuit-Breaker)
     - [Zero-Downtime deploy(Readiness Probe)](#Zero-Downtime-deploy(Readiness-Probe))
     - [Self-healing(Liveness Probe)](#Self-healing(Liveness-Probe))
@@ -628,7 +628,7 @@ $ tail -n 20 -f injection.log
 
 <img src="https://user-images.githubusercontent.com/2360083/121015318-d296ed00-c7d5-11eb-90ad-679f6513905d.png" width="100%" />
 
-## Autoscale (HPA)
+## Autoscale
 
 - metric 서버를 설치한다.
 
