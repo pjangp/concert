@@ -630,11 +630,17 @@ $ tail -n 20 -f injection.log
 
 ## Autoscale (HPA)
 
-  앞서 CB 는 시스템을 안정되게 운영할 수 있게 해줬지만 사용자의 요청을 100% 받아들여주지 못했기 때문에 이에 대한 보완책으로 자동화된 확장 기능을 적용하고자 한다. 
+- metric 서버를 설치한다.
+
+```sh
+kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/download/v0.3.7/components.yaml
+kubectl get deployment metrics-server -n kube-system
+```
   
 - 현재상태 확인
 ```sh
 $ kubectl get deploy complain -w -n conertbooking
+```
 
 - 예약 서비스에 리소스에 대한 사용량을 정의한다.
 
