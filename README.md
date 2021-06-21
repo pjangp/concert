@@ -164,7 +164,7 @@ mvn spring-boot:run
 ```
 
 ## DDD 의 적용
-- 이벤트 스토밍을 통해 도출된 Micro Service 는 총 6개이나, 3개만 구현하였으며 그 중 View는 CQRS를 위한 서비스이다.
+이벤트 스토밍을 통해 도출된 Micro Service 는 총 6개이나, 3개만 구현하였으며 그 중 View는 CQRS를 위한 서비스이다.
 
 |MSA|기능|port|URL|
 | :--: | :--: | :--: | :--: |
