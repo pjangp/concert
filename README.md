@@ -13,13 +13,13 @@
     - [폴리글랏 퍼시스턴스](#폴리글랏-퍼시스턴스)
     - [동기식 호출과 Fallback 처리](#동기식-호출과-Fallback-처리)
   - [운영](#운영)
-    - [Deploy/ Pipeline](#Deploy/Pipeline)
+    - [Deploy/Pipeline](#Deploy/Pipeline)
     - [Config Map](#Config-Map)
     - [Persistence Volume](#Persistence-Volume)
-    - [Autoscale (HPA)](#Autoscale-(HPA))
-    - [Circuit Breaker](#Circuit-Breaker)
-    - [Zero-Downtime deploy (Readiness Probe)](#Zero-Downtime-deploy-(Readiness-Probe))
-    - [Self-healing (Liveness Probe)](#Self-healing-(Liveness-Probe))
+    - [Autoscale(HPA)](#Autoscale-(HPA))
+    - [CircuitBreaker](#Circuit-Breaker)
+    - [Zero-Downtime deploy(Readiness Probe)](#Zero-Downtime-deploy-(Readiness-Probe))
+    - [Self-healing(Liveness Probe)](#Self-healing-(Liveness-Probe))
 
 # 서비스 시나리오
 
