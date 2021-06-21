@@ -173,11 +173,12 @@ mvn spring-boot:run
 
 ## DDD 의 적용
 - 이벤트 스토밍을 통해 도출된 Micro Service 는 총 6개이나, 3개만 구현하였으며 그 중 View는 CQRS를 위한 서비스이다.
+
 |MSA|기능|port|URL|
 | :--: | :--: | :--: | :--: |
 |concert| 티켓정보 관리 |8081|http://localhost:8081/concerts|
 |booking| 티켓예매 관리 |8082|http://localhost:8082/bookings|
-|view| 콘서는 예매내역 조회 |8086|http://localhost:8086/views|
+|view| 콘서 예매내역 조회 |8086|http://localhost:8086/views|
 
 
 
