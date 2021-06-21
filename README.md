@@ -467,13 +467,13 @@ Vaccine 서비스 내 Booking 서비스 Feign Client 요청 대상
 - git에서 소스 가져오기
 
 ```
-git clone --recurse-submodules https://github.com/dt-3team/anticorona.git
+git clone --recurse-submodules https://github.com/skteam4/concert.git
 ```
 
 - Build 하기
 
 ```bash
-cd /anticorona
+cd /alarm
 cd gateway
 mvn package
 
@@ -482,15 +482,15 @@ cd booking
 mvn package
 
 cd ..
-cd vaccine
+cd concert
 mvn package
 
 cd ..
-cd injection
+cd delivery
 mvn package
 
 cd ..
-cd mypage
+cd payment
 mvn package
 ```
 
