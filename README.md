@@ -201,7 +201,7 @@ spring:
         - id: concert
           uri: http://concert:8080
           predicates:
-            - Path=/concerts/** , /checkAndBookStock/**
+            - Path=/concerts/**
         - id: booking
           uri: http://booking:8080
           predicates:
