@@ -14,8 +14,6 @@
     - [동기식 호출과 Fallback 처리](#동기식-호출과-Fallback-처리)
   - [운영](#운영)
     - [Deploy/Pipeline](#Deploy-Pipeline)
-    - [Config Map](#Config-Map)
-    - [Persistence Volume](#Persistence-Volume)
     - [Autoscale(HPA)](#Autoscale)
     - [Circuit Breaker](#Circuit-Breaker)
     - [Zero-Downtime deploy(Readiness Probe)](#Zero-Downtime-deploy(Readiness-Probe))
