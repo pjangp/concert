@@ -341,7 +341,9 @@ public boolean checkAndBookStock(HttpServletRequest request, HttpServletResponse
 ```
 
 공연 정보를 등록함
-![image](https://user-images.githubusercontent.com/82795860/120994076-1e8a6780-c7bf-11eb-8374-53f7a4336a1a.png)
+
+![concert](https://user-images.githubusercontent.com/85874443/122849383-61634800-d346-11eb-8d6d-73c09867dc17.PNG)
+
 
 
 티켓을 예매함
