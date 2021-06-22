@@ -66,7 +66,8 @@
 ![image](https://user-images.githubusercontent.com/85874443/122227160-9ceab600-cef1-11eb-9dee-52b2f63dd9ac.png)
 
 ### 시나리오 요구사항 check
-<img width="100%" height="100%" alt="hex" src="https://user-images.githubusercontent.com/85874443/122320354-0fdd4680-cf5d-11eb-9ab2-1bfcf9ac89e9.PNG">
+![aa](https://user-images.githubusercontent.com/85874443/122866087-5dddba00-d362-11eb-81d4-82e3bacf1db9.PNG)
+
 
 ### 헥사고날 아키텍처 다이어그램 도출
 <img width="1447" alt="hex2" src="https://user-images.githubusercontent.com/85874443/122849190-fca7ed80-d345-11eb-8a40-654f41365d2a.PNG">
@@ -456,7 +457,7 @@ $ siege -c20 -t40S -v --content-type "application/json" 'http://localhost:8082/b
 
   ![Hystrix설정전_fallback설정후](https://user-images.githubusercontent.com/85874443/122845630-172a9880-d33f-11eb-9aec-5592f9a56ee3.PNG)
 
-- 부하를 줬을 때 fallback 설정 전에는 500 에러가 발생했으나, fallback 설정 이후에는 100% 정상적으로 처리함
+- 부하를 줬을 때 Hystrix 설정 전에는 500 에러가 발생했으나, Hystrix 로 CB를 설정 후에는 적절히 회로가 열림과 닫힘이 벌어지면서 자원을 보호하고 있으며, 100% 정상적으로 처리함
 
 ***
 
