@@ -116,7 +116,8 @@
 
 # 분석/설계
 ## Event Storming 결과
-* MSAEz 로 모델링한 이벤트스토밍 결과:  http://www.msaez.io/#/storming/qLV82i54nWb4vM37CFUde5Jdpew2/mine/42d737bdb5439088560e23bbc2d7e5e7
+* MSAEz 로 모델링한 이벤트스토밍 결과:  http://www.msaez.io/#/storming/wCwpUDxVtrWKc54qAaeMyXoCFoT2/mine/72cb437f5c71c03d9ed514225311dda7
+
 
 ### 이벤트 도출
 ![image](https://user-images.githubusercontent.com/85874443/122223814-8000b380-ceee-11eb-93a3-3c69d431226b.png)
