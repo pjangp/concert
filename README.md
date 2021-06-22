@@ -1,3 +1,4 @@
+![concert](https://user-images.githubusercontent.com/85874443/122849139-e863f080-d345-11eb-8661-8eedb3528f83.PNG)
 # concert
 
 # Table of contents
@@ -346,7 +347,7 @@ public boolean checkAndBookStock(HttpServletRequest request, HttpServletResponse
 
 티켓 예매하기 시도 시 티켓의 재고 수량을 체크함
 
-![image](https://user-images.githubusercontent.com/82795860/120994076-1e8a6780-c7bf-11eb-8374-53f7a4336a1a.png)
+![concert](https://user-images.githubusercontent.com/85874443/122849163-f285ef00-d345-11eb-9ec0-a7cfd3ff895b.PNG)
 
 
 티켓 예매 시 티켓의 재고수량을 초과하지 않으면 예매 가능
