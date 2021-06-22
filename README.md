@@ -389,110 +389,18 @@ cd payment
 mvn package
 ```
 
-- Docker Image Push/deploy/서비스생성(yml이용)
+- aws 이미지 캡처
 
-```sh
--- 기본 namespace 설정
-kubectl config set-context --current --namespace=anticorona
 
--- namespace 생성
-kubectl create ns anticorona
 
-cd gateway
-az acr build --registry skccanticorona --image skccanticorona.azurecr.io/gateway:latest .
 
-cd kubernetes
-kubectl apply -f deployment.yml
-kubectl apply -f service.yaml
-
-cd ..
-cd booking
-az acr build --registry skccanticorona --image skccanticorona.azurecr.io/booking:latest .
-
-cd kubernetes
-kubectl apply -f deployment.yml
-kubectl apply -f service.yaml
-
-cd ..
-cd vaccine
-az acr build --registry skccanticorona --image skccanticorona.azurecr.io/vaccine:latest .
-
-cd kubernetes
-kubectl apply -f deployment.yml
-kubectl apply -f service.yaml
-
-cd ..
-cd injection
-az acr build --registry skccanticorona --image skccanticorona.azurecr.io/injection:latest .
-
-cd kubernetes
-kubectl apply -f deployment.yml
-kubectl apply -f service.yaml
-
-cd ..
-cd mypage
-az acr build --registry skccanticorona --image skccanticorona.azurecr.io/mypage:latest .
-
-cd kubernetes
-kubectl apply -f deployment.yml
-kubectl apply -f service.yaml
-
-```
-
-- anticorona/gateway/kubernetes/deployment.yml 파일 
-
-```yml
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: gateway
-  namespace: anticorona
-  labels:
-    app: gateway
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: gateway
-  template:
-    metadata:
-      labels:
-        app: gateway
-    spec:
-      containers:
-        - name: gateway
-          image: skccanticorona.azurecr.io/gateway:latest
-          ports:
-            - containerPort: 8080
-```	  
-
-- anticorona/gateway/kubernetes/service.yaml 파일 
-
-```yml
-apiVersion: v1
-kind: Service
-metadata:
-  name: gateway
-  namespace: anticorona
-  labels:
-    app: gateway
-spec:
-  ports:
-    - port: 8080
-      targetPort: 8080
-  type: LoadBalancer
-  selector:
-    app: gateway
-```	  
-
-- anticorona/booking/kubernetes/deployment.yml 파일 
+- concert/booking/kubernetes/deployment.yml 파일 
 
 ```yml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: booking
-  namespace: anticorona
   labels:
     app: booking
 spec:
@@ -507,34 +415,20 @@ spec:
     spec:
       containers:
         - name: booking
-          image: skccanticorona.azurecr.io/booking:latest
+          image: xxxxxx.dkr.ecr.ca-central-1.amazonaws.com/booking:v4
           ports:
             - containerPort: 8080
-          env:
-            - name: vaccine-url
-              valueFrom:
-                configMapKeyRef:
-                  name: apiurl
-                  key: url
+          readinessProbe:
+            httpGet:
+              path: '/actuator/health'
+              port: 8080
+            initialDelaySeconds: 10
+            timeoutSeconds: 2
+            periodSeconds: 5
+            failureThreshold: 10
+          livenessProbe:
 ```	  
 
-- anticorona/booking/kubernetes/service.yaml 파일 
-
-```yml
-apiVersion: v1
-kind: Service
-metadata:
-  name: booking
-  namespace: anticorona
-  labels:
-    app: booking
-spec:
-  ports:
-    - port: 8080
-      targetPort: 8080
-  selector:
-    app: booking
-```	  
 
 - deploy 완료(istio 부착기준)
 
