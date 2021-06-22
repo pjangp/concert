@@ -288,7 +288,7 @@ public boolean checkAndBookStock(HttpServletRequest request, HttpServletResponse
 # 운영
 
 ## Deploy/Pipeline
-각 구현체들은 각자의 source repository 에 구성되었고, deployment.yml, service.yml가 포함되었다.
+각 구현체들은 각자의 source repository 에 구성되었고, 각 서비스별로 빌드를 하여, aws ecr에 등록 후 deployment.yaml 통해 EKS에 배포함.
 
 - git에서 소스 가져오기
 
