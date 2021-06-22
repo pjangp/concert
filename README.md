@@ -447,12 +447,12 @@ hystrix:
 $ siege -c20 -t40S -v --content-type "application/json" 'http://localhost:8082/bookings POST {"ccId":1, "ccName":"mong", "ccDate":"20210621", "qty":2 ,"customerId":6007 ,"bookingStatus":"success"}'
 ```
 
-- Hystrix 설정전
+- Hystrix 설정 + fallback 설정 전
 
   ![Hystrix설정후_fallback설정전](https://user-images.githubusercontent.com/85874443/122845849-899b7880-d33f-11eb-8f9b-e266db0afde1.PNG)
 
   
-- Hystrix 설정후
+- Hystrix 설정 + fallback 설정 후
 
   ![Hystrix설정전_fallback설정후](https://user-images.githubusercontent.com/85874443/122845630-172a9880-d33f-11eb-9aec-5592f9a56ee3.PNG)
 
