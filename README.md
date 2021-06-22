@@ -228,14 +228,14 @@ spring:
 Materialized View 를 구현하여, 타 마이크로서비스의 데이터 원본에 접근없이(Composite 서비스나 조인SQL 등 없이) 도 내 서비스의 화면 구성과 잦은 조회가 가능하게 구현해 두었다.
 본 프로젝트에서 Mypage 역할은 view 서비스가 수행한다.
 
-예약(Booked) 실행 후 view 화면
- 
-![image](https://user-images.githubusercontent.com/82795860/121005958-526b8a00-c7cb-11eb-9bae-ad4bd70ef2eb.png)
+예매(Booked) 실행
 
+![image](https://user-images.githubusercontent.com/85874443/122845508-dfbbec00-d33e-11eb-951e-871882d1406a.PNG)
 
+예매(Booked) 실행 후 view 화면
 
-![image](https://user-images.githubusercontent.com/82795860/121006311-bb530200-c7cb-11eb-9d85-a7b22d1a2729.png)
-  
+![image](https://user-images.githubusercontent.com/85874443/122845559-f104f880-d33e-11eb-9549-d1a60056a2b3.PNG)  
+
 ## 폴리글랏 퍼시스턴스
 concert 서비스의 DB 를 HSQL 로 설정하여 MSA간 서로 다른 종류의 DB간에도 문제 없이 동작하여 다형성을 만족하는지 확인하였다.
 
