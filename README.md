@@ -223,9 +223,15 @@ spring:
 Materialized View 를 구현하여, 타 마이크로서비스의 데이터 원본에 접근없이(Composite 서비스나 조인SQL 등 없이) 도 내 서비스의 화면 구성과 잦은 조회가 가능하게 구현해 두었다.
 본 프로젝트에서 Mypage 역할은 view 서비스가 수행한다.
 
+모든 정보는 비동기 방식으로 발행된 이벤트(예매, 예매 취소)를 수신하여 처리된다.
+
 예매(Booked) 실행
  
 ![image](https://user-images.githubusercontent.com/85874443/122846091-17776380-d340-11eb-87e6-fb330d787236.PNG)
+
+카프카 메시지
+
+![ka1](https://user-images.githubusercontent.com/85874443/122853258-e6516000-d34c-11eb-9783-37814741be1c.PNG)
 
 예매(Booked) 실행 후 mypage 화면
 
