@@ -51,16 +51,16 @@
 ![image](https://user-images.githubusercontent.com/85874443/122223814-8000b380-ceee-11eb-93a3-3c69d431226b.png)
 
 ### 부적격 이벤트 제거
-![image](https://user-images.githubusercontent.com/85874443/122223889-8ee76600-ceee-11eb-9cd0-970c00b43cef.png)
+![image](https://user-images.githubusercontent.com/85874443/122864914-70ef8a80-d360-11eb-94ff-a5da8b2dc82a.png)
 
 ### 액터/커맨드 부착
-![image](https://user-images.githubusercontent.com/85874443/122223935-97d83780-ceee-11eb-9e5c-7b3cb1b13978.png)
+![image](https://user-images.githubusercontent.com/85874443/122864929-751ba800-d360-11eb-8e06-0ec85ea7baca.png)
 
 ### 어그리게잇으로 묶기
-![image](https://user-images.githubusercontent.com/85874443/122223970-9f97dc00-ceee-11eb-8cd1-16ac65057044.png)
+![image](https://user-images.githubusercontent.com/85874443/122864938-7947c580-d360-11eb-9312-73744c6c9d01.png)
 
 ### 바운디드 컨텍스트로 묶기
-![image](https://user-images.githubusercontent.com/85874443/122224015-a9b9da80-ceee-11eb-8118-9b10af5d378f.png)
+![image](https://user-images.githubusercontent.com/85874443/122864950-7e0c7980-d360-11eb-8940-cc3573bac9e2.png)
 
 ### 이벤트스토밍 최종 결과
 ![image](https://user-images.githubusercontent.com/85874443/122227160-9ceab600-cef1-11eb-9dee-52b2f63dd9ac.png)
