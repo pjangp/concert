@@ -180,9 +180,7 @@ mvn spring-boot:run
 - booking 서비스의 예매
 ![booking](https://user-images.githubusercontent.com/85874443/122735451-0257f180-d2ba-11eb-9194-a871828eb95b.PNG)
 
-- view 티켓예매 상태 확인
 
-![image](https://user-images.githubusercontent.com/85874443/122846131-2a8a3380-d340-11eb-851e-be9df34e5cdf.PNG)
 
 Gateway 적용
 API GateWay를 통하여 마이크로 서비스들의 진입점을 통일할 수 있다. 
