@@ -238,30 +238,12 @@ Materialized View 를 구현하여, 타 마이크로서비스의 데이터 원�
   
 ## 폴리글랏 퍼시스턴스
 concert 서비스의 DB 를 HSQL 로 설정하여 MSA간 서로 다른 종류의 DB간에도 문제 없이 동작하여 다형성을 만족하는지 확인하였다.
-(폴리글랏을 만족)
 
 |서비스|DB|pom.xml|
 | :--: | :--: | :--: |
 |concert| HSQL |![concert_hsqldb](https://user-images.githubusercontent.com/85874443/122845192-15aca080-d33e-11eb-8dc8-79974d3b77e6.PNG)|
 |booking| H2 |![booking_h2db](https://user-images.githubusercontent.com/85874443/122845208-1c3b1800-d33e-11eb-998c-e6bf5ada128a.PNG)|
 |view| H2 |![booking_h2db](https://user-images.githubusercontent.com/85874443/122845208-1c3b1800-d33e-11eb-998c-e6bf5ada128a.PNG)|
-
-
-
-<!-- 
-		<dependency>
-			<groupId>com.h2database</groupId>
-			<artifactId>h2</artifactId>
-			<scope>runtime</scope>
-		</dependency>
- -->
-		<dependency>
-		    <groupId>org.hsqldb</groupId>
-		    <artifactId>hsqldb</artifactId>
-		    <version>2.4.0</version>
-		    <scope>runtime</scope>
-		</dependency>
-
 
 
 ## 동기식 호출과 Fallback 처리
