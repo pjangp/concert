@@ -237,14 +237,16 @@ Materialized View 를 구현하여, 타 마이크로서비스의 데이터 원�
 ![image](https://user-images.githubusercontent.com/82795860/121006311-bb530200-c7cb-11eb-9d85-a7b22d1a2729.png)
   
 ## 폴리글랏 퍼시스턴스
-mypage 서비스의 DB와 Booking/injection/vaccine 서비스의 DB를 다른 DB를 사용하여 MSA간 서로 다른 종류의 DB간에도 문제 없이 동작하여 다형성을 만족하는지 확인하였다.
+concert 서비스의 DB 를 HSQL 로 설정하여 MSA간 서로 다른 종류의 DB간에도 문제 없이 동작하여 다형성을 만족하는지 확인하였다.
 (폴리글랏을 만족)
 
 |서비스|DB|pom.xml|
 | :--: | :--: | :--: |
-|concert| H2 |![image](https://user-images.githubusercontent.com/2360083/121104579-4f10e680-c83d-11eb-8cf3-002c3d7ff8dc.png)|
-|booking| H2 |![image](https://user-images.githubusercontent.com/2360083/121104579-4f10e680-c83d-11eb-8cf3-002c3d7ff8dc.png)|
-|view| HSQL |![image](https://user-images.githubusercontent.com/2360083/120982836-1842be00-c7b4-11eb-91de-ab01170133fd.png)|
+|concert| HSQL |![concert_hsqldb](https://user-images.githubusercontent.com/85874443/122845192-15aca080-d33e-11eb-8dc8-79974d3b77e6.PNG)|
+|booking| H2 |![booking_h2db](https://user-images.githubusercontent.com/85874443/122845208-1c3b1800-d33e-11eb-998c-e6bf5ada128a.PNG)|
+|view| H2 |![booking_h2db](https://user-images.githubusercontent.com/85874443/122845208-1c3b1800-d33e-11eb-998c-e6bf5ada128a.PNG)|
+
+
 
 <!-- 
 		<dependency>
