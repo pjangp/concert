@@ -389,10 +389,10 @@ mvn package
 
 - aws 이미지 캡처
 
+<img width="705" alt="aws_repository" src="https://user-images.githubusercontent.com/85874443/122850409-1f3b0600-d348-11eb-8ebd-e3653bafe919.PNG">
 
-![ECR](https://user-images.githubusercontent.com/85874443/122850000-79879700-d347-11eb-8967-78fb398a8bd5.PNG)
 
-
+<img width="682" alt="aws_book_tag" src="https://user-images.githubusercontent.com/85874443/122850413-2235f680-d348-11eb-807f-b2aef08c24ff.PNG">
 
 
 - concert/booking/kubernetes/deployment.yml 파일 
