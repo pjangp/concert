@@ -288,7 +288,7 @@ public boolean checkAndBookStock(HttpServletRequest request, HttpServletResponse
 # 운영
 
 ## Deploy/Pipeline
-각 구현체들은 각자의 source repository 에 구성되었고, 사용한 CI/CD 플랫폼은 AWS를 사용하였으며, pipeline build script 는 각 프로젝트 폴더 이하에 deployment.yml, service.yml 에 포함되었다.
+각 구현체들은 각자의 source repository 에 구성되었고, deployment.yml, service.yml가 포함되었다.
 
 - git에서 소스 가져오기
 
