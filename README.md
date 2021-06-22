@@ -69,7 +69,7 @@
 ### 시나리오 요구사항 check
 <img width="100%" height="100%" alt="hex" src="https://user-images.githubusercontent.com/85874443/122320354-0fdd4680-cf5d-11eb-9ab2-1bfcf9ac89e9.PNG">
 
-## 헥사고날 아키텍처 다이어그램 도출
+### 헥사고날 아키텍처 다이어그램 도출
 <img width="1447" alt="hex2" src="https://user-images.githubusercontent.com/85874443/122849190-fca7ed80-d345-11eb-8a40-654f41365d2a.PNG">
 
 
