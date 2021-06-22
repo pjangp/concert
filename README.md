@@ -485,7 +485,7 @@ readinessProbe:
 - kubectl apply -f deployment.yml
 - kubectl apply -f service.yaml
 
-- booking이 배포되는 중,  
+- readiness 적용 전. booking이 배포되는 중  
   ![update_version_80%](https://user-images.githubusercontent.com/85874443/122764789-c84b1780-d2da-11eb-951c-b6058f77b208.PNG)
 
 
