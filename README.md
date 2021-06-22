@@ -340,22 +340,16 @@ public boolean checkAndBookStock(HttpServletRequest request, HttpServletResponse
  }
 ```
 
-동작 확인
-
-티켓 예매하기 시도 시 티켓의 재고 수량을 체크함
-
+공연 정보를 등록함
 ![image](https://user-images.githubusercontent.com/82795860/120994076-1e8a6780-c7bf-11eb-8374-53f7a4336a1a.png)
 
 
-티켓 예매 시 티켓의 재고수량을 초과하지 않으면 예매 가능
+티켓을 예매함
+![booking](https://user-images.githubusercontent.com/85874443/122849272-252fe780-d346-11eb-8ee5-51469a470115.PNG)
 
-![image](https://user-images.githubusercontent.com/82795860/120997798-78406100-c7c2-11eb-90fa-b8ff71f53c77.png)
 
-
-티켓 예매시 티켓 재고수량을 초과할 경우 예매 안됨
-
-![image](https://user-images.githubusercontent.com/82795860/120993294-5b099380-c7be-11eb-8970-b2b0e28d6e40.png)
-
+티켓 예매를 취소함
+![cancle](https://user-images.githubusercontent.com/85874443/122849246-1a755280-d346-11eb-9455-e7a4de36cf12.PNG)
 
 
 # 운영
