@@ -1,4 +1,3 @@
-![concert](https://user-images.githubusercontent.com/85874443/122849139-e863f080-d345-11eb-8661-8eedb3528f83.PNG)
 # concert
 
 # Table of contents
@@ -143,9 +142,7 @@
 <img width="100%" height="100%" alt="hex" src="https://user-images.githubusercontent.com/85874443/122320354-0fdd4680-cf5d-11eb-9ab2-1bfcf9ac89e9.PNG">
 
 ## 헥사고날 아키텍처 다이어그램 도출
-<img width="100%" height="100%" alt="hex" src="https://user-images.githubusercontent.com/85874443/122163362-0944c580-ceb0-11eb-9316-3280f171995f.PNG">
-
-
+<img width="1447" alt="hex2" src="https://user-images.githubusercontent.com/85874443/122849190-fca7ed80-d345-11eb-8a40-654f41365d2a.PNG">
 
 
 # 구현:
@@ -347,7 +344,7 @@ public boolean checkAndBookStock(HttpServletRequest request, HttpServletResponse
 
 티켓 예매하기 시도 시 티켓의 재고 수량을 체크함
 
-![concert](https://user-images.githubusercontent.com/85874443/122849163-f285ef00-d345-11eb-9ec0-a7cfd3ff895b.PNG)
+![image](https://user-images.githubusercontent.com/82795860/120994076-1e8a6780-c7bf-11eb-8374-53f7a4336a1a.png)
 
 
 티켓 예매 시 티켓의 재고수량을 초과하지 않으면 예매 가능
