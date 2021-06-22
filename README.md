@@ -392,6 +392,9 @@ mvn package
 - aws 이미지 캡처
 
 
+![ECR](https://user-images.githubusercontent.com/85874443/122850000-79879700-d347-11eb-8967-78fb398a8bd5.PNG)
+
+
 
 
 - concert/booking/kubernetes/deployment.yml 파일 
@@ -430,75 +433,9 @@ spec:
 ```	  
 
 
-- deploy 완료(istio 부착기준)
-
-![image](https://user-images.githubusercontent.com/82795806/120998532-24824780-c7c3-11eb-8f01-d73860d68426.png)
-
 ***
 
-## Config Map
 
-- 변경 가능성이 있는 설정을 ConfigMap을 사용하여 관리  
-  - booking 서비스에서 바라보는 vaccine 서비스 url 일부분을 ConfigMap 사용하여 구현​  
-
-- in booking src (booking/src/main/java/anticorona/external/VaccineService.java)  
-    ![configmap-in src](https://user-images.githubusercontent.com/18115456/120984025-35c45780-c7b5-11eb-8181-bfed9a943e67.png)
-
-- booking application.yml (booking/src/main/resources/application.yml)​  
-    ![configmap-application yml](https://user-images.githubusercontent.com/18115456/120984136-5096cc00-c7b5-11eb-8745-78cb754c0e1b.PNG)
-
-- booking deploy yml (booking/kubernetes/deployment.yml)  
-    ![configmap-deploy yml](https://user-images.githubusercontent.com/18115456/120984461-a2d7ed00-c7b5-11eb-9f2f-6b09ad0ba9cf.png)
-
-- configmap 생성 후 조회
-
-    ```sh
-    kubectl create configmap apiurl --from-literal=url=vaccine -n anticorona
-    ```
-
-    ![configmap-configmap조회](https://user-images.githubusercontent.com/18115456/120985042-2eea1480-c7b6-11eb-9dbc-e73d696c003b.PNG)
-
-- configmap 삭제 후, 에러 확인  
-
-    ```sh
-    kubectl delete configmap apiurl
-    ```
-
-    ![configmap-오류1](https://user-images.githubusercontent.com/18115456/120985205-5b9e2c00-c7b6-11eb-8ede-df74eff7f344.png)
-
-    ![configmap-오류2](https://user-images.githubusercontent.com/18115456/120985213-5ccf5900-c7b6-11eb-9c06-5402942329a3.png)  
-
-## Persistence Volume
-  
-PVC 생성 파일
-
-<code>injection-pvc.yml</code>
-- AccessModes: **ReadWriteMany**
-- storeageClass: **azurefile**
-
-![image](https://user-images.githubusercontent.com/2360083/120986163-41188280-c7b7-11eb-8e23-755d645efbed.png)
-
-<code>deployment.yml</code>
-
-- Container에 Volumn Mount
-
-![image](https://user-images.githubusercontent.com/2360083/120983890-175e5c00-c7b5-11eb-9332-04033438cea1.png)
-
-<code>application.yml</code>
-- profile: **docker**
-- logging.file: PVC Mount 경로
-
-![image](https://user-images.githubusercontent.com/2360083/120983856-10374e00-c7b5-11eb-93d5-42e1178912a8.png)
-
-마운트 경로에 logging file 생성 확인
-
-```sh
-$ kubectl exec -it injection -n anticorona -- /bin/sh
-$ cd /mnt/azure/logs
-$ tail -n 20 -f injection.log
-```
-
-<img src="https://user-images.githubusercontent.com/2360083/121015318-d296ed00-c7d5-11eb-90ad-679f6513905d.png" width="100%" />
 
 ## Autoscale
 
