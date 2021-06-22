@@ -692,9 +692,12 @@ $ siege -c20 -t40S -v --content-type "application/json" 'http://localhost:8082/b
 ```
 
 - Hystrix 설정전
-  ![Hystrix설정전_fallback설정후](https://user-images.githubusercontent.com/85874443/122845459-c6b33b00-d33e-11eb-8303-42f8bb2adb62.PNG)
+
+  ![Hystrix설정후_fallback설정전](https://user-images.githubusercontent.com/85874443/122845849-899b7880-d33f-11eb-8f9b-e266db0afde1.PNG)
+
   
 - Hystrix 설정후
+
   ![Hystrix설정전_fallback설정후](https://user-images.githubusercontent.com/85874443/122845630-172a9880-d33f-11eb-9aec-5592f9a56ee3.PNG)
 
 - 운영시스템은 죽지 않고 지속적으로 CB 에 의하여 적절히 회로가 열림과 닫힘이 벌어지면서 자원을 보호하고 있으며, 100% 정상적으로 처리함
