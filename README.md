@@ -109,8 +109,8 @@ mvn spring-boot:run
 |팀과제|concert| 티켓정보 관리 |8081|http://localhost:8081/concerts|
 |팀과제|booking| 티켓예매 관리 |8082|http://localhost:8082/bookings|
 |팀과제|view| 콘서트 예매내역 조회 |8086|http://localhost:8086/mypages|
-|개인과제|payment| 결제 처리 |8086|http://localhost:8085/payments|
-|개인과제|point| point 관리 |8086|http://localhost:8084/points|
+|개인과제|payment| 결제 처리 |8085|http://localhost:8085/payments|
+|개인과제|point| point 관리 |8084|http://localhost:8084/points|
 
 - concert 서비스의 콘서드 정보 등록
 ![콘서트 등록](https://user-images.githubusercontent.com/82200734/124563887-6c0bfa00-de7b-11eb-941c-3eb491025eae.PNG)
@@ -248,8 +248,7 @@ Materialized View 를 구현하여, 타 마이크로서비스의 데이터 원�
 ![카푸 결제](https://user-images.githubusercontent.com/82200734/124565045-9ad6a000-de7c-11eb-87e5-105232fc13f6.PNG)
 
 결제(PaymentCreated) 실행 후 mypage 화면
-![마이페이지 결제후](https://user-images.githubusercontent.com/82200734/124565171-b477e780-de7c-11eb-8462-c748397a481c.PNG)
-
+![마이페이지 결제후](https://user-images.githubusercontent.com/82200734/124568244-abd4e080-de7f-11eb-9e50-4dcdca18b471.PNG)
 
   
 ## 폴리글랏 퍼시스턴스
