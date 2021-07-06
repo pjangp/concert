@@ -104,7 +104,7 @@ mvn spring-boot:run
 ## DDD 의 적용
 이벤트 스토밍을 통해 도출된 Micro Service 는 총 6개이나, 5개만 구현하였으며 그 중 View는 CQRS를 위한 서비스이다.
 
-|MSA|기능|port|URL|
+|과제유형|MSA|기능|port|URL|
 | :--: | :--: | :--: | :--: | :--: |
 |팀과제|concert| 티켓정보 관리 |8081|http://localhost:8081/concerts|
 |팀과제|booking| 티켓예매 관리 |8082|http://localhost:8082/bookings|
@@ -125,6 +125,7 @@ mvn spring-boot:run
 ![포인트 등록](https://user-images.githubusercontent.com/82200734/124564137-b7260d00-de7b-11eb-8a58-3849fff921e9.PNG)
 
 - view 서비스의 mypage 조회
+
 ![포인트](https://user-images.githubusercontent.com/82200734/124564222-cd33cd80-de7b-11eb-9a52-95d0663ca303.PNG)
 
 
@@ -239,6 +240,7 @@ Materialized View 를 구현하여, 타 마이크로서비스의 데이터 원�
 ![카푸 예매](https://user-images.githubusercontent.com/82200734/124564749-564b0480-de7c-11eb-8999-203d18b8321d.PNG)
 
 예매(Booked) 실행 후 mypage 화면
+
 ![마이페이지 예매후](https://user-images.githubusercontent.com/82200734/124564889-78dd1d80-de7c-11eb-9374-d240e4d49058.PNG)
 
 결제(PaymentCreated) 실행
@@ -248,6 +250,7 @@ Materialized View 를 구현하여, 타 마이크로서비스의 데이터 원�
 ![카푸 결제](https://user-images.githubusercontent.com/82200734/124565045-9ad6a000-de7c-11eb-87e5-105232fc13f6.PNG)
 
 결제(PaymentCreated) 실행 후 mypage 화면
+
 ![마이페이지 결제후](https://user-images.githubusercontent.com/82200734/124565171-b477e780-de7c-11eb-8462-c748397a481c.PNG)
 
 
