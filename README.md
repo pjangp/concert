@@ -125,8 +125,7 @@ mvn spring-boot:run
 ![포인트 등록](https://user-images.githubusercontent.com/82200734/124564137-b7260d00-de7b-11eb-8a58-3849fff921e9.PNG)
 
 - view 서비스의 mypage 조회
-
-![포인트](https://user-images.githubusercontent.com/82200734/124564222-cd33cd80-de7b-11eb-9a52-95d0663ca303.PNG)
+![마이페이지 결제후](https://user-images.githubusercontent.com/82200734/124567923-60bacd80-de7f-11eb-952e-62a74a2effc2.PNG)
 
 
 Gateway 적용
@@ -240,8 +239,7 @@ Materialized View 를 구현하여, 타 마이크로서비스의 데이터 원�
 ![카푸 예매](https://user-images.githubusercontent.com/82200734/124564749-564b0480-de7c-11eb-8999-203d18b8321d.PNG)
 
 예매(Booked) 실행 후 mypage 화면
-
-![마이페이지 예매후](https://user-images.githubusercontent.com/82200734/124564889-78dd1d80-de7c-11eb-9374-d240e4d49058.PNG)
+![마이페이지 예매후](https://user-images.githubusercontent.com/82200734/124567985-6dd7bc80-de7f-11eb-9f64-e420fe122fc5.PNG)
 
 결제(PaymentCreated) 실행
 ![결제](https://user-images.githubusercontent.com/82200734/124564990-8eeade00-de7c-11eb-970d-67172b68aa2f.PNG)
@@ -250,7 +248,6 @@ Materialized View 를 구현하여, 타 마이크로서비스의 데이터 원�
 ![카푸 결제](https://user-images.githubusercontent.com/82200734/124565045-9ad6a000-de7c-11eb-87e5-105232fc13f6.PNG)
 
 결제(PaymentCreated) 실행 후 mypage 화면
-
 ![마이페이지 결제후](https://user-images.githubusercontent.com/82200734/124565171-b477e780-de7c-11eb-8462-c748397a481c.PNG)
 
 
