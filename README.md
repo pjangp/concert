@@ -26,14 +26,15 @@
   3.  고객은 콘서트 예매를 취소할 수 있다.
   4.  콘서트 좌석을 초과하여 예매할 수 없다.
   5.  고객이 예매를 하면, 예매가능한 티켓 수량이 감소한다.
-  6.  ~~결제가 완료되면 티켓을 배송한다.(팀과제)~~
-  7.  ~~결제가 취소되면, 배송이 취소된다.(팀과제)~~
-  6. 결제가 완료되면 포인트가 적립된다.(개인과제 추가)
-  7. 결제가 취소되면 포인트가 차감된다.(개인과제 추가)
-  8. 결제시 포인트로 결제가 가능하며 사용한 포인트만큼 포인트가 차감된다.(개인과제 추가)
-  9. 포인트가 포함된 결제가 취소되면 사용한 포인트만큼 포인트가 재적립된다.(개인과제 추가)
-  10.  이벤트가 발생하면, 고객에게 알림 메시지가 간다.
-  11. 고객은 예매정보를 확인 할 수 있다.
+  6.  고객이 예매를 취소하면, 티겟 수량이 증가한다.
+  7.  ~~결제가 완료되면 티켓을 배송한다.(팀과제)~~
+  8.  ~~결제가 취소되면, 배송이 취소된다.(팀과제)~~
+  9. 결제가 완료되면 포인트가 적립된다.(개인과제 추가)
+  10. 결제가 취소되면 포인트가 차감된다.(개인과제 추가)
+  11. 결제시 포인트로 결제가 가능하며 사용한 포인트만큼 포인트가 차감된다.(개인과제 추가)
+  12. 포인트가 포함된 결제가 취소되면 사용한 포인트만큼 포인트가 재적립된다.(개인과제 추가)
+  13.  이벤트가 발생하면, 고객에게 알림 메시지가 간다.
+  14. 고객은 예매정보를 확인 할 수 있다.
 
 # 비기능적 요구사항
 1. 트랜잭션
@@ -54,28 +55,28 @@
 
 
 ### 이벤트 도출
-![image](https://user-images.githubusercontent.com/85874443/122223814-8000b380-ceee-11eb-93a3-3c69d431226b.png)
+![이벤트도출](https://user-images.githubusercontent.com/82200734/124548304-7ffa3080-de68-11eb-9495-c87686178494.PNG)
 
 ### 부적격 이벤트 제거
-![image](https://user-images.githubusercontent.com/85874443/122864914-70ef8a80-d360-11eb-94ff-a5da8b2dc82a.png)
+![부적격이벤트제거](https://user-images.githubusercontent.com/82200734/124548344-8c7e8900-de68-11eb-9047-6ab1b9f35bd8.PNG)
 
 ### 액터/커맨드 부착
-![image](https://user-images.githubusercontent.com/85874443/122864929-751ba800-d360-11eb-8e06-0ec85ea7baca.png)
+![커맨드부착](https://user-images.githubusercontent.com/82200734/124548436-ae780b80-de68-11eb-920c-e060d08d09c2.PNG)
 
 ### 어그리게잇으로 묶기
-![image](https://user-images.githubusercontent.com/85874443/122864938-7947c580-d360-11eb-9312-73744c6c9d01.png)
+![어그리겟](https://user-images.githubusercontent.com/82200734/124548468-b9cb3700-de68-11eb-9e58-3d5801173409.PNG)
 
 ### 바운디드 컨텍스트로 묶기
-![image](https://user-images.githubusercontent.com/85874443/122864950-7e0c7980-d360-11eb-8940-cc3573bac9e2.png)
+![컨텍스트](https://user-images.githubusercontent.com/82200734/124548522-cc457080-de68-11eb-8b45-a8179b67a00d.PNG)
 
 ### 이벤트스토밍 최종 결과
-![image](https://user-images.githubusercontent.com/85874443/122227160-9ceab600-cef1-11eb-9dee-52b2f63dd9ac.png)
+![최종](https://user-images.githubusercontent.com/82200734/124548542-d5364200-de68-11eb-83c2-5328e4ec05ab.PNG)
 
 ### 시나리오 요구사항 check
-<img width="100%" height="100%" alt="hex" src="https://user-images.githubusercontent.com/85874443/122320354-0fdd4680-cf5d-11eb-9ab2-1bfcf9ac89e9.PNG">
+![시나리오체크](https://user-images.githubusercontent.com/82200734/124548711-0dd61b80-de69-11eb-91fe-7599d7eed76d.PNG)
 
 ### 헥사고날 아키텍처 다이어그램 도출
-<img width="1447" alt="hex2" src="https://user-images.githubusercontent.com/85874443/122849190-fca7ed80-d345-11eb-8a40-654f41365d2a.PNG">
+![헥사고날](https://user-images.githubusercontent.com/82200734/124548745-162e5680-de69-11eb-9ad9-1358840c8b5b.PNG)
 
 
 # 구현:
