@@ -93,29 +93,39 @@ mvn spring-boot:run
 cd concert
 mvn spring-boot:run  
 
+cd payment
+mvn spring-boot:run  
+
+cd point
+mvn spring-boot:run  
+
 ```
 
 ## DDD 의 적용
-이벤트 스토밍을 통해 도출된 Micro Service 는 총 6개이나, 3개만 구현하였으며 그 중 View는 CQRS를 위한 서비스이다.
+이벤트 스토밍을 통해 도출된 Micro Service 는 총 6개이나, 5개만 구현하였으며 그 중 View는 CQRS를 위한 서비스이다.
 
 |MSA|기능|port|URL|
-| :--: | :--: | :--: | :--: |
-|concert| 티켓정보 관리 |8081|http://localhost:8081/concerts|
-|booking| 티켓예매 관리 |8082|http://localhost:8082/bookings|
-|view| 콘서트 예매내역 조회 |8086|http://localhost:8086/mypages|
+| :--: | :--: | :--: | :--: | :--: |
+|팀과제|concert| 티켓정보 관리 |8081|http://localhost:8081/concerts|
+|팀과제|booking| 티켓예매 관리 |8082|http://localhost:8082/bookings|
+|팀과제|view| 콘서트 예매내역 조회 |8086|http://localhost:8086/mypages|
+|개인과제|payment| 결제 처리 |8086|http://localhost:8085/payments|
+|개인과제|point| point 관리 |8086|http://localhost:8084/points|
 
-
-- AWS에 gateway 등록
-![gateway](https://user-images.githubusercontent.com/85874443/122735509-0f74e080-d2ba-11eb-84ef-6438b66c62f2.PNG)
-
-
-- concert 서비스의 티켓등록
-![concert](https://user-images.githubusercontent.com/85874443/122735425-fc621080-d2b9-11eb-89a8-bb5f727ee13a.PNG)
-
+- concert 서비스의 콘서드 정보 등록
+![콘서트 등록](https://user-images.githubusercontent.com/82200734/124563887-6c0bfa00-de7b-11eb-941c-3eb491025eae.PNG)
 
 - booking 서비스의 예매
-![booking](https://user-images.githubusercontent.com/85874443/122735451-0257f180-d2ba-11eb-9194-a871828eb95b.PNG)
+![예매](https://user-images.githubusercontent.com/82200734/124564061-a2497980-de7b-11eb-98ed-77d5d95f898b.PNG)
 
+- payment 서비스의 결제
+![결제](https://user-images.githubusercontent.com/82200734/124563982-87770500-de7b-11eb-9b76-4b18d42e13f8.PNG)
+
+- point 서비스의 point 적립
+![포인트 등록](https://user-images.githubusercontent.com/82200734/124564137-b7260d00-de7b-11eb-8a58-3849fff921e9.PNG)
+
+- view 서비스의 mypage 조회
+![포인트](https://user-images.githubusercontent.com/82200734/124564222-cd33cd80-de7b-11eb-9a52-95d0663ca303.PNG)
 
 
 Gateway 적용
@@ -123,6 +133,54 @@ API GateWay를 통하여 마이크로 서비스들의 진입점을 통일할 수
 다음과 같이 GateWay를 적용하였다.
 
 ```yaml
+server:
+  port: 8088
+
+---
+
+spring:
+  profiles: default
+  cloud:
+    gateway:
+      routes:
+        - id: concert
+          uri: http://localhost:8081
+          predicates:
+            - Path=/concerts/** 
+        - id: booking
+          uri: http://localhost:8082
+          predicates:
+            - Path=/bookings/** 
+        - id: Alarm
+          uri: http://localhost:8083
+          predicates:
+            - Path=/alarms/** 
+        - id: point
+          uri: http://localhost:8084
+          predicates:
+            - Path=/points/**, /pointcheck/** 
+        - id: payment
+          uri: http://localhost:8085
+          predicates:
+            - Path=/payments/** 
+        - id: View
+          uri: http://localhost:8086
+          predicates:
+            - Path= /mypages/**
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins:
+              - "*"
+            allowedMethods:
+              - "*"
+            allowedHeaders:
+              - "*"
+            allowCredentials: true
+
+
+---
+
 spring:
   profiles: docker
   cloud:
@@ -131,7 +189,7 @@ spring:
         - id: concert
           uri: http://concert:8080
           predicates:
-            - Path=/concerts/**
+            - Path=/concerts/** 
         - id: booking
           uri: http://booking:8080
           predicates:
@@ -140,37 +198,59 @@ spring:
           uri: http://Alarm:8080
           predicates:
             - Path=/alarms/** 
-        - id: Delivery
-          uri: http://Delivery:8080
+        - id: point
+          uri: http://point:8080
           predicates:
-            - Path=/deliveries/** 
-        - id: Payment
-          uri: http://Payment:8080
+            - Path=/points/**, /pointcheck/** 
+        - id: payment
+          uri: http://payment:8080
           predicates:
             - Path=/payments/** 
         - id: View
           uri: http://View:8080
           predicates:
             - Path= /mypages/**
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins:
+              - "*"
+            allowedMethods:
+              - "*"
+            allowedHeaders:
+              - "*"
+            allowCredentials: true
+
+server:
+  port: 8080
 ```  
 
 ## CQRS
 Materialized View 를 구현하여, 타 마이크로서비스의 데이터 원본에 접근없이(Composite 서비스나 조인SQL 등 없이) 도 내 서비스의 화면 구성과 잦은 조회가 가능하게 구현해 두었다.
 본 프로젝트에서 Mypage 역할은 view 서비스가 수행한다.
 
-모든 정보는 비동기 방식으로 발행된 이벤트(예매, 예매 취소)를 수신하여 처리된다.
+모든 정보는 비동기 방식으로 발행된 이벤트(팀과제 : 예매, 예매 취소 , 개인과제 결제 : 결제, 결제 취소, 포인트 적립)를 수신하여 처리된다.
+
 
 예매(Booked) 실행
- 
-![image](https://user-images.githubusercontent.com/85874443/122846091-17776380-d340-11eb-87e6-fb330d787236.PNG)
+![예매](https://user-images.githubusercontent.com/82200734/124564704-4b906f80-de7c-11eb-9348-4a82def41198.PNG)
 
 카프카 메시지
-
-![ka1](https://user-images.githubusercontent.com/85874443/122853258-e6516000-d34c-11eb-9783-37814741be1c.PNG)
+![카푸 예매](https://user-images.githubusercontent.com/82200734/124564749-564b0480-de7c-11eb-8999-203d18b8321d.PNG)
 
 예매(Booked) 실행 후 mypage 화면
+![마이페이지 예매후](https://user-images.githubusercontent.com/82200734/124564889-78dd1d80-de7c-11eb-9374-d240e4d49058.PNG)
 
-![image](https://user-images.githubusercontent.com/85874443/122846131-2a8a3380-d340-11eb-851e-be9df34e5cdf.PNG)
+결제(PaymentCreated) 실행
+![결제](https://user-images.githubusercontent.com/82200734/124564990-8eeade00-de7c-11eb-970d-67172b68aa2f.PNG)
+
+카푸카메시지
+![카푸 결제](https://user-images.githubusercontent.com/82200734/124565045-9ad6a000-de7c-11eb-87e5-105232fc13f6.PNG)
+
+결제(PaymentCreated) 실행 후 mypage 화면
+![마이페이지 결제후](https://user-images.githubusercontent.com/82200734/124565171-b477e780-de7c-11eb-8462-c748397a481c.PNG)
+
+
   
 ## 폴리글랏 퍼시스턴스
 concert 서비스의 DB 를 HSQL 로 설정하여 MSA간 서로 다른 종류의 DB간에도 문제 없이 동작하여 다형성을 만족하는지 확인하였다.
