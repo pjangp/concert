@@ -59,7 +59,7 @@ spring:
           uri: http://booking:8080
           predicates:
             - Path=/bookings/** 
-        - id: Alarm
+        - id: alarm
           uri: http://Alarm:8080
           predicates:
             - Path=/alarms/** 
@@ -71,7 +71,7 @@ spring:
           uri: http://payment:8080
           predicates:
             - Path=/payments/** 
-        - id: View
+        - id: view
           uri: http://View:8080
           predicates:
             - Path= /mypages/**
