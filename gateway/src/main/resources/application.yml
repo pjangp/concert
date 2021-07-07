@@ -16,7 +16,7 @@ spring:
           uri: http://localhost:8082
           predicates:
             - Path=/bookings/** 
-        - id: Alarm
+        - id: alarm
           uri: http://localhost:8083
           predicates:
             - Path=/alarms/** 
@@ -28,7 +28,7 @@ spring:
           uri: http://localhost:8085
           predicates:
             - Path=/payments/** 
-        - id: View
+        - id: view
           uri: http://localhost:8086
           predicates:
             - Path= /mypages/**
@@ -60,7 +60,7 @@ spring:
           predicates:
             - Path=/bookings/** 
         - id: alarm
-          uri: http://Alarm:8080
+          uri: http://alarm:8080
           predicates:
             - Path=/alarms/** 
         - id: point
@@ -72,7 +72,7 @@ spring:
           predicates:
             - Path=/payments/** 
         - id: view
-          uri: http://View:8080
+          uri: http://view:8080
           predicates:
             - Path= /mypages/**
       globalcors:
