@@ -435,18 +435,22 @@ siege -c20 -t40S -v http://a5cb5ea9f93da4ef3b97d5048a02b76a-1240042388.ap-northe
 $ kubectl get deploy booking -w
 ```
 * siege 부하테스트 전
+
 ![pod  정상](https://user-images.githubusercontent.com/82200734/124875364-c59f3080-e003-11eb-8169-afa5c8c64a4f.PNG)
 
 * siege 부하테스트 후
+
 ![pod늘어남](https://user-images.githubusercontent.com/82200734/124875383-ca63e480-e003-11eb-8214-bdfa432a40b5.PNG)
 
 ```sh
 $ kubectl get hpa
 ```
 * siege 부하테스트 전
+
 ![hpa 부하전](https://user-images.githubusercontent.com/82200734/124875638-1a42ab80-e004-11eb-982d-ccd73f5f744a.PNG)
 
 * siege 부하테스트 후
+
 ![hpa 늘어나고나서](https://user-images.githubusercontent.com/82200734/124875661-1f9ff600-e004-11eb-9157-98f54f332761.PNG)
 
 
@@ -497,7 +501,7 @@ $ siege -c20 -t40S -v --content-type "application/json" 'http://localhost:8082/b
 
 ## Zero-Downtime deploy (Readiness Probe)
 
-- deployment.yml에 정상 적용되어 있는 readinessProbe  
+- 포인트 서비스의 deployment.yml에 정상 적용되어 있는 readinessProbe  
 ```yml
 readinessProbe:
   httpGet:
@@ -515,11 +519,14 @@ readinessProbe:
 - kubectl apply -f service.yaml
 
 - readiness 적용 전. booking이 배포되는 중  
-  ![update_version_80%](https://user-images.githubusercontent.com/85874443/122764789-c84b1780-d2da-11eb-951c-b6058f77b208.PNG)
+
+![readiness  미적용](https://user-images.githubusercontent.com/82200734/124885894-b5408300-e00e-11eb-8980-c425159bf181.PNG)
+
 
 
 - 다시 readiness 정상 적용 후, Availability 100% 확인  
-  ![update_version_100%](https://user-images.githubusercontent.com/85874443/122764804-ce40f880-d2da-11eb-83fa-af8a85d8431b.PNG)
+![readiness  적용](https://user-images.githubusercontent.com/82200734/124885921-bc679100-e00e-11eb-9f1d-59351a8b27eb.PNG)
+
 
 
     
