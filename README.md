@@ -290,7 +290,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.Date;
 
-@FeignClient(name="point", url="${prop.room.url}")
+@FeignClient(name="point", url="${prop.room.url}" , fallback = PointServiceImpl.class)
 public interface PointService {
 
     @RequestMapping(method= RequestMethod.GET, path="pointcheck/checkAndDeductPoint")
