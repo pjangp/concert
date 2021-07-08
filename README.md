@@ -224,6 +224,10 @@ spring:
 server:
   port: 8080
 ```  
+EKS에 배포 시, MSA는 Service type을 ClusterIP(default)로 설정하여, 클러스터 내부에서만 호출 가능하도록 한다.
+API Gateway는 Service type을 LoadBalancer로 설정하여 외부 호출에 대한 라우팅을 처리한다.
+![Gateway](https://user-images.githubusercontent.com/82200734/124864790-7bfb1980-dff4-11eb-89e5-df5f27cab903.PNG)
+
 
 ## CQRS
 Materialized View 를 구현하여, 타 마이크로서비스의 데이터 원본에 접근없이(Composite 서비스나 조인SQL 등 없이) 도 내 서비스의 화면 구성과 잦은 조회가 가능하게 구현해 두었다.
@@ -262,114 +266,95 @@ concert 서비스의 DB 를 HSQL 로 설정하여 MSA간 서로 다른 종류의
 
 
 ## 동기식 호출과 Fallback 처리
-분석단계에서의 조건 중 하나로  콘서트 티켓 예약수량은 등록된 티켓 수량을 초과 할 수 없으며
-예약(Booking)->콘서트(Concert) 간의 호출은 동기식 일관성을 유지하는 트랜잭션으로 처리하기로 하였다. 
+팀과제 : 콘서트 티켓 예약수량은 등록된 티켓 수량을 초과 할 수 없으며
+예약(Booking)->콘서트(Concert) 간의 호출은 동기식 일관성을 유지하는 트랜잭션으로 처리하기로 하였다.
+개인 과제 : 결제 시 Point를 사용할 수 있는데, 적립된 Point를 초과할 수 없으며
+결제(payment)->포인트(point)간의  호출은 동기식 일관성을 유지하는 트랜잭션으로 처리하기로 하였다.
 호출 프로토콜은 Rest Repository 에 의해 노출되어있는 REST 서비스를 FeignClient 를 이용하여 호출하도록 한다.
 
 
 
-Booking  내 external.ConcertService
+Payment 서비스  내 external.PointService.java 파일
 
 ```java
 package concertbooking.external;
 
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.Date;
 
-@FeignClient(name="Concert", url="http://localhost:8081")
-public interface ConcertService {
+@FeignClient(name="point", url="${prop.room.url}")
+public interface PointService {
 
-    @RequestMapping(method= RequestMethod.GET, path="/checkAndBookStock")
-    public boolean checkAndBookStock(@RequestParam("ccId") Long ccId , @RequestParam("qty") int qty);
+    @RequestMapping(method= RequestMethod.GET, path="pointcheck/checkAndDeductPoint")
+    public boolean checkAndDeductPoint(@RequestParam("customerId") long customerId, @RequestParam("usedPoint") Integer usedPoint);
 
+}
 }
 ```
 
-Booking 서비스 내 Req/Resp
+Payment 서비스 내 payment.java 파일
 
 ```java
     @PostPersist
-    public void onPostPersist() throws Exception{
-        
-        
-        boolean rslt = BookingApplication.applicationContext.getBean(concertbooking.external.ConcertService.class)
-            .checkAndBookStock(this.getCcId(), this.getQty());
+    public void onPostPersist(){     
 
-            if (rslt) {
-                Booked booked = new Booked();
-                BeanUtils.copyProperties(this, booked);
-                booked.publishAfterCommit();
-            }  
-            else{
-                throw new Exception("Out of Stock Exception Raised.");
-            }      
-        
+        boolean result = PaymentApplication.applicationContext.getBean(concertbooking.external.PointService.class)
+        .checkAndDeductPoint(this.getCustomerId(), this.getUsedPoint());
+        System.out.println("######## Check Result : " + result);
 
-    }
-```
+        if(result) {             
+            PaymentCreated paymentCreated = new PaymentCreated();
+            BeanUtils.copyProperties(this, paymentCreated);
+            paymentCreated.setPaymentStatus("payCompleted");
+            paymentCreated.publishAfterCommit();
+        }
+    }```
 
-Concert 서비스 내 Booking 서비스 Feign Client 요청 대상
+point 서비스 내 PointController.java 파일 서비스
 
 ```java
 @RestController
-public class ConcertController {
-
-@Autowired
-ConcertRepository concertRepository;
-
-@RequestMapping(value = "/checkAndBookStock",
+ public class PointController {
+    
+    @Autowired
+    PointRepository pointRepository;
+    
+    @RequestMapping(value = "/pointcheck/checkAndDeductPoint",
         method = RequestMethod.GET,
         produces = "application/json;charset=UTF-8")
 
-public boolean checkAndBookStock(HttpServletRequest request, HttpServletResponse response)
+        public boolean checkAndDeductPoint(HttpServletRequest request, HttpServletResponse response)
         throws Exception {
-     
-        System.out.println("##### /concert/checkAndBookStock  called #####");
+                // Parameter로 받은 customerId 추출
+                long customerId = Long.valueOf(request.getParameter("customerId"));
+                Integer usedPoint = Integer.valueOf(request.getParameter("usedPoint"));
+                System.out.println("######################## checkAndDeductPoint customerId : " + customerId);
+                System.out.println("######################## checkAndDeductPoint use Point : " + usedPoint);
 
-        boolean status = false;
-        
-        Long ccId = Long.valueOf(request.getParameter("ccId"));
-        int qty = Integer.parseInt(request.getParameter("qty"));
+                // Point 데이터 조회
+                Optional<Point> res = pointRepository.findById(customerId);
+                Point point = res.get();
+                System.out.println("######################## checkAndDeductPoint Saved Point : " + usedPoint);
 
-        System.out.println("##### ccid #####" + ccId +"##### qty" + qty);
-        Optional<Concert> concert = concertRepository.findById(ccId);
-        
-        if(concert.isPresent()){
+                //point 체크
+                boolean result = false;
+                 if(point.getPointTotal() >= usedPoint ) {
+                    point.setPointTotal(point.getPointTotal() - usedPoint);
+                    pointRepository.save(point);
+                        
+                    result = true;
+                 } 
 
-                Concert concertValue = concert.get();
-
-                if (concertValue.getStock() >= qty) {
-                        concertValue.setStock(concertValue.getStock() - qty);
-                        concertRepository.save(concertValue);
-                        status = true;
-                        System.out.println("##### /concert/checkAndBookStock  qty check true ##### stock"+concertValue.getStock()+"### qty"+ qty);
-                }
-
-                System.out.println("##### /concert/checkAndBookStock  qty check false ##### stock"+concertValue.getStock()+"### qty"+ qty);
+                System.out.println("######################## checkAndDeductPoint Return : " + result);
+                return result;
         }
-
-        return status;
-        }
-        
  }
 ```
-
-공연 정보를 등록함
-
-![concert](https://user-images.githubusercontent.com/85874443/122849383-61634800-d346-11eb-8d6d-73c09867dc17.PNG)
-
-
-
-티켓을 예매함
-![booking](https://user-images.githubusercontent.com/85874443/122849272-252fe780-d346-11eb-8ee5-51469a470115.PNG)
-
-
-티켓 예매를 취소함
-![cancle](https://user-images.githubusercontent.com/85874443/122849246-1a755280-d346-11eb-9455-e7a4de36cf12.PNG)
-
 
 # 운영
 
@@ -379,74 +364,33 @@ public boolean checkAndBookStock(HttpServletRequest request, HttpServletResponse
 - git에서 소스 가져오기
 
 ```
-git clone --recurse-submodules https://github.com/skteam4/concert/concertbooking.git
+git clone -b master https://github.com/pjangp/concert.git
 ```
 
 - Build 하기
 
 ```bash
-cd /alarm
-cd gateway
-mvn package
-
-cd ..
-cd booking
-mvn package
-
-cd ..
-cd concert
-mvn package
-
-cd ..
-cd delivery
-mvn package
-
-cd ..
-cd payment
-mvn package
+각 서비스(concert/booking/payment/point/view) 별로 build
+cd 서비스명
+mvn package -B
 ```
 
-- aws 이미지 캡처
-
-<img width="705" alt="aws_repository" src="https://user-images.githubusercontent.com/85874443/122850409-1f3b0600-d348-11eb-8ebd-e3653bafe919.PNG">
-
-
-<img width="682" alt="aws_book_tag" src="https://user-images.githubusercontent.com/85874443/122850413-2235f680-d348-11eb-807f-b2aef08c24ff.PNG">
+- aws ECS의 Repository 생성
+![ECR](https://user-images.githubusercontent.com/82200734/124867231-a7800300-dff8-11eb-807a-24f8c8981b68.PNG)
 
 
-- concert/booking/kubernetes/deployment.yml 파일 
 
+- ECR, EKS 에 적용 
 ```yml
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: booking
-  labels:
-    app: booking
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: booking
-  template:
-    metadata:
-      labels:
-        app: booking
-    spec:
-      containers:
-        - name: booking
-          image: xxxxxx.dkr.ecr.ca-central-1.amazonaws.com/booking:v4
-          ports:
-            - containerPort: 8080
-          readinessProbe:
-            httpGet:
-              path: '/actuator/health'
-              port: 8080
-            initialDelaySeconds: 10
-            timeoutSeconds: 2
-            periodSeconds: 5
-            failureThreshold: 10
-          livenessProbe:
+
+cd 서비스명
+docker build -t 879772956301.dkr.ecr.ap-northeast-2.amazonaws.com/user05-booking:v1 .;
+docker push 879772956301.dkr.ecr.ap-northeast-2.amazonaws.com/user05-booking:v1;
+
+cd 서비스명/kubernetes
+kubectl apply -f deployment.yml;
+kubectl apply -f service.yaml;
+
 ```	  
 
 
