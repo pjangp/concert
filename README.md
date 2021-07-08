@@ -533,23 +533,44 @@ readinessProbe:
 ## Self-healing (Liveness Probe)
 
 - deployment.yml에 정상 적용되어 있는 livenessProbe  
+Container 실행 후, /tmp/healthy 파일 생성 90초 후, 삭제
+livenessProbe에 'cat /tmp/healthy' 검증도록 함
 
 ```yml
-livenessProbe:
-  httpGet:
-    path: '/actuator/health'
-    port: 8080
-  initialDelaySeconds: 120
-  timeoutSeconds: 2
-  periodSeconds: 5
-  failureThreshold: 5
+    spec:
+      containers:
+        - name: point
+          image: 879772956301.dkr.ecr.ap-northeast-2.amazonaws.com/user05-point:v2
+          imagePullPolicy: Always
+          args:
+            - /bin/sh
+            - -c
+            - touch /tmp/healthy; sleep 10; rm -rf /tmp/healthy; sleep 600;
+          ports:
+            - containerPort: 8080
+          resources:
+            requests:
+              cpu: "200m"  
+          readinessProbe:
+            httpGet:
+              path: '/actuator/health'
+              port: 8080
+            initialDelaySeconds: 10
+            timeoutSeconds: 2
+            periodSeconds: 5
+            failureThreshold: 10
+          livenessProbe:            
+            # httpGet:
+            #   path: '/actuator/health'
+            #   port: 8080
+            exec:
+              command:
+                - cat
+                - /tmp/healthy        
 ```
 
-- port 및 path 잘못된 값으로 변경 후, retry 시도 확인 
-    - booking 에 있는 deployment.yml 수정  
-        ![livenessProbe_yaml](https://user-images.githubusercontent.com/85874443/122760461-1c073200-d2d6-11eb-8db8-c25c6ef9abb4.png)
-
-
+- Container 실행 이 후, /tmp/healthy 파일 삭제되고, LivenessProbe 실패 리턴함. 
     - retry 시도 확인  
-        ![livenessProbe](https://user-images.githubusercontent.com/85874443/122760301-ecf0c080-d2d5-11eb-9da5-bd39c7867e24.png)
+    ![liveness](https://user-images.githubusercontent.com/82200734/124897471-4ddc0080-e019-11eb-84bf-0a47006c7229.PNG)
+
 
