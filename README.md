@@ -269,10 +269,10 @@ concert 서비스의 DB 를 HSQL 로 설정하여 MSA간 서로 다른 종류의
 
 
 ## 동기식 호출과 Fallback 처리
-팀과제 : 콘서트 티켓 예약수량은 등록된 티켓 수량을 초과 할 수 없으며
-예약(Booking)->콘서트(Concert) 간의 호출은 동기식 일관성을 유지하는 트랜잭션으로 처리하기로 하였다.
-개인 과제 : 결제 시 Point를 사용할 수 있는데, 적립된 Point를 초과할 수 없으며
-결제(payment)->포인트(point)간의  호출은 동기식 일관성을 유지하는 트랜잭션으로 처리하기로 하였다.
+팀과제 : 콘서트 티켓 예약수량은 등록된 티켓 수량을 초과 할 수 없으며 예약(Booking)->콘서트(Concert) 간의 호출은 동기식 일관성을 유지하는 트랜잭션으로 처리하기로 하였다.
+
+개인 과제 : 결제 시 Point를 사용할 수 있는데, 적립된 Point를 초과할 수 없으며 결제(payment)->포인트(point)간의  호출은 동기식 일관성을 유지하는 트랜잭션으로 처리하기로 하였다.
+
 호출 프로토콜은 Rest Repository 에 의해 노출되어있는 REST 서비스를 FeignClient 를 이용하여 호출하도록 한다.
 
 
@@ -518,10 +518,8 @@ readinessProbe:
 - kubectl apply -f deployment.yml
 - kubectl apply -f service.yaml
 
-- readiness 적용 전. booking이 배포되는 중  
-
+- readiness 적용 전. 포인트 서비스 배포되는 중  
 ![readiness  미적용](https://user-images.githubusercontent.com/82200734/124885894-b5408300-e00e-11eb-8980-c425159bf181.PNG)
-
 
 
 - 다시 readiness 정상 적용 후, Availability 100% 확인  
@@ -570,7 +568,7 @@ livenessProbe에 'cat /tmp/healthy' 검증도록 함
 ```
 
 - Container 실행 이 후, /tmp/healthy 파일 삭제되고, LivenessProbe 실패 리턴함. 
-    - retry 시도 확인  
+    - container의 상태가 비정상이라고 판단하여 Pod를 재시작함  
     ![liveness](https://user-images.githubusercontent.com/82200734/124897471-4ddc0080-e019-11eb-84bf-0a47006c7229.PNG)
 
 
