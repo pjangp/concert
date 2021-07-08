@@ -51,7 +51,7 @@
 
 # 분석/설계
 ## Event Storming 결과
-* MSAEz 로 모델링한 이벤트스토밍 결과:  http://www.msaez.io/#/storming/wCwpUDxVtrWKc54qAaeMyXoCFoT2/mine/72cb437f5c71c03d9ed514225311dda7
+* MSAEz 로 모델링한 이벤트스토밍 결과:  http://www.msaez.io/#/storming/wCwpUDxVtrWKc54qAaeMyXoCFoT2/mine/c10d211cdd3c6d198eb891fede354ae4
 
 
 ### 이벤트 도출
@@ -76,12 +76,13 @@
 ![시나리오체크](https://user-images.githubusercontent.com/82200734/124548711-0dd61b80-de69-11eb-91fe-7599d7eed76d.PNG)
 
 ### 헥사고날 아키텍처 다이어그램 도출
-![헥사고날](https://user-images.githubusercontent.com/82200734/124548745-162e5680-de69-11eb-9ad9-1358840c8b5b.PNG)
+![헥사고날](https://user-images.githubusercontent.com/82200734/124916396-98677800-e02d-11eb-954c-4d68e8fd571b.PNG)
+
 
 
 # 구현:
 
-분석/설계 단계에서 도출된 헥사고날 아키텍처에 따라, 각 BC별로 대변되는 마이크로 서비스들을 스프링부트와 파이선으로 구현하였다. 구현한 각 서비스를 로컬에서 실행하는 방법은 아래와 같다 (각자의 포트넘버는 8081 ~ 808n 이다)
+분석/설계 단계에서 도출된 헥사고날 아키텍처에 따라, 각 BC별로 대변되는 마이크로 서비스들을 스프링부트로 구현하였다. 구현한 각 서비스를 로컬에서 실행하는 방법은 아래와 같다 (각자의 포트넘버는 8081 ~ 808n 이다)
 
 ```
 cd view
@@ -458,8 +459,10 @@ $ kubectl get hpa
 ## Circuit Breaker
 
   * 서킷 브레이킹 프레임워크의 선택: Spring FeignClient + Hystrix 설치
-  * 시나리오는 예약(booking) >> 콘서트(concert) 연결을 RESTful Request/Response 로 연동하여 구현이 되어있고, 예약 요청이 과도할 경우 CB 를 통하여 장애격리
-  * Booking 서비스 내 XX에 FeignClient 에 적용
+  * 팀과제 : 시나리오는 예약(booking) >> 콘서트(concert) 연결을 RESTful Request/Response 로 연동하여 구현이 되어있고, 예약 요청이 과도할 경우 CB 를 통하여 장애격리
+  * 팀과제 : Booking 서비스 내 XX에 FeignClient 에 적용
+  * 개인과제 : 결제(payment) >> 포인트(point) 연결을 RESTful Request/Response 로 연동하여 구현이 되어있고, 포인트(point) 서비스에 문제가 있을 경우 CB 를 통하여 장애격리
+  * 개인과제 : Point 서비스 내 XX에 FeignClient 에 적용
   * Hystrix 설정
 
 ```yml
@@ -481,21 +484,16 @@ $ siege -c20 -t40S -v --content-type "application/json" 'http://localhost:8082/b
 ```
 
 - fallback 설정
+  PointService.java  
+  ![fall1](https://user-images.githubusercontent.com/82200734/124917528-e8930a00-e02e-11eb-9ae6-e35567d50104.PNG)
 
-![fallback설정](https://user-images.githubusercontent.com/85874443/122866266-9d0c0b00-d362-11eb-92ca-43179c843e30.PNG)
-![fallback함수](https://user-images.githubusercontent.com/85874443/122866315-b4e38f00-d362-11eb-8437-dd24f46977eb.PNG)
+  PointServiceImpl.java  
+  ![fall2](https://user-images.githubusercontent.com/82200734/124917543-ed57be00-e02e-11eb-9eda-efd6af25c6ef.PNG)
 
-
-- Hystrix 설정 + fallback 설정 전
-
-  ![Hystrix설정후_fallback설정전](https://user-images.githubusercontent.com/85874443/122845849-899b7880-d33f-11eb-8f9b-e266db0afde1.PNG)
-
-  
-- Hystrix 설정 + fallback 설정 후
-
-  ![Hystrix설정전_fallback설정후](https://user-images.githubusercontent.com/85874443/122845630-172a9880-d33f-11eb-9aec-5592f9a56ee3.PNG)
-
-- 부하를 줬을 때 fallback 설정 전에는 500 에러가 발생했으나, fallback 설정 이후에는 100% 정상적으로 처리함
+- 부하를 줬을 때 500 에러가 발생하지 않고, fallback 함수에서 처리한 메시지가 발생되며, 100% 처리됨
+  ![CB_siege](https://user-images.githubusercontent.com/82200734/124917704-1aa46c00-e02f-11eb-9d5c-291cdf73d501.PNG)
+  ![CB_2](https://user-images.githubusercontent.com/82200734/124917720-1f692000-e02f-11eb-8067-d74ffd39d311.PNG)
+ 
 
 ***
 
