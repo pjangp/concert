@@ -152,7 +152,7 @@ spring:
           uri: http://localhost:8082
           predicates:
             - Path=/bookings/** 
-        - id: Alarm
+        - id: alarm
           uri: http://localhost:8083
           predicates:
             - Path=/alarms/** 
@@ -164,7 +164,7 @@ spring:
           uri: http://localhost:8085
           predicates:
             - Path=/payments/** 
-        - id: View
+        - id: view
           uri: http://localhost:8086
           predicates:
             - Path= /mypages/**
@@ -195,8 +195,8 @@ spring:
           uri: http://booking:8080
           predicates:
             - Path=/bookings/** 
-        - id: Alarm
-          uri: http://Alarm:8080
+        - id: alarm
+          uri: http://alarm:8080
           predicates:
             - Path=/alarms/** 
         - id: point
@@ -207,8 +207,8 @@ spring:
           uri: http://payment:8080
           predicates:
             - Path=/payments/** 
-        - id: View
-          uri: http://View:8080
+        - id: view
+          uri: http://view:8080
           predicates:
             - Path= /mypages/**
       globalcors:
@@ -259,11 +259,13 @@ Materialized View 를 구현하여, 타 마이크로서비스의 데이터 원�
 ## 폴리글랏 퍼시스턴스
 concert 서비스의 DB 를 HSQL 로 설정하여 MSA간 서로 다른 종류의 DB간에도 문제 없이 동작하여 다형성을 만족하는지 확인하였다.
 
-|서비스|DB|pom.xml|
-| :--: | :--: | :--: |
-|concert| HSQL |![concert_hsqldb](https://user-images.githubusercontent.com/85874443/122845192-15aca080-d33e-11eb-8dc8-79974d3b77e6.PNG)|
-|booking| H2 |![booking_h2db](https://user-images.githubusercontent.com/85874443/122845208-1c3b1800-d33e-11eb-998c-e6bf5ada128a.PNG)|
-|view| H2 |![booking_h2db](https://user-images.githubusercontent.com/85874443/122845208-1c3b1800-d33e-11eb-998c-e6bf5ada128a.PNG)|
+|과제유형|서비스|DB|pom.xml|
+| :--: | :--: | :--: | :--: |
+|팀 과제|concert| HSQL |![concert_hsqldb](https://user-images.githubusercontent.com/85874443/122845192-15aca080-d33e-11eb-8dc8-79974d3b77e6.PNG)|
+|팀 과제|booking| H2 |![booking_h2db](https://user-images.githubusercontent.com/85874443/122845208-1c3b1800-d33e-11eb-998c-e6bf5ada128a.PNG)|
+|팀 과제|view| H2 |![booking_h2db](https://user-images.githubusercontent.com/85874443/122845208-1c3b1800-d33e-11eb-998c-e6bf5ada128a.PNG)|
+|개인 과제|payment| HSQL |![concert_hsqldb](https://user-images.githubusercontent.com/85874443/122845192-15aca080-d33e-11eb-8dc8-79974d3b77e6.PNG)|
+|개인 과제|point| H2 |![booking_h2db](https://user-images.githubusercontent.com/85874443/122845208-1c3b1800-d33e-11eb-998c-e6bf5ada128a.PNG)|
 
 
 ## 동기식 호출과 Fallback 처리
@@ -314,7 +316,8 @@ Payment 서비스 내 payment.java 파일
             paymentCreated.setPaymentStatus("payCompleted");
             paymentCreated.publishAfterCommit();
         }
-    }```
+    }
+```
 
 point 서비스 내 PointController.java 파일 서비스
 
@@ -408,9 +411,8 @@ kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/down
 kubectl get deployment metrics-server -n kube-system
 ```
 
-- 포인트 서비스에 리소스에 대한 사용량을 정의한다.
-  resources.requests.cpu: "200m" 추가
-<code>point/kubernetes/deployment.yml</code>
+- 포인트 서비스에 리소스에 대한 사용량을 정의한다.resources.requests.cpu: "200m" 추가
+  point/kubernetes/deployment.yml</code>
 
 ```yml
           resources:
