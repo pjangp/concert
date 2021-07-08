@@ -420,7 +420,7 @@ kubectl get deployment metrics-server -n kube-system
               cpu: "200m"  
 ```
 
-- 예약 서비스에 대한 replica 를 동적으로 늘려주도록 HPA 를 설정한다. 설정은 CPU 사용량이 20프로를 넘어서면 replica 를 3개까지 늘려준다:
+- 로인트 서비스에 대한 replica 를 동적으로 늘려주도록 HPA 를 설정한다. 설정은 CPU 사용량이 20프로를 넘어서면 replica 를 3개까지 늘려준다:
 
 ```sh
 $ kubectl autoscale deployment point --cpu-percent=20 --min=1 --max=3
@@ -462,9 +462,7 @@ $ kubectl get hpa
 
   * 서킷 브레이킹 프레임워크의 선택: Spring FeignClient + Hystrix 설치
   * 팀과제 : 시나리오는 예약(booking) >> 콘서트(concert) 연결을 RESTful Request/Response 로 연동하여 구현이 되어있고, 예약 요청이 과도할 경우 CB 를 통하여 장애격리
-  * 팀과제 : Booking 서비스 내 XX에 FeignClient 에 적용
   * 개인과제 : 결제(payment) >> 포인트(point) 연결을 RESTful Request/Response 로 연동하여 구현이 되어있고, 포인트(point) 서비스에 문제가 있을 경우 CB 를 통하여 장애격리
-  * 개인과제 : Point 서비스 내 XX에 FeignClient 에 적용
   * Hystrix 설정
 
 ```yml
