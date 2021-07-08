@@ -407,30 +407,26 @@ kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/down
 kubectl get deployment metrics-server -n kube-system
 ```
 
-- 예약 서비스에 리소스에 대한 사용량을 정의한다.
-
-<code>booking/kubernetes/deployment.yml</code>
+- 포인트 서비스에 리소스에 대한 사용량을 정의한다.
+  resources.requests.cpu: "200m" 추가
+<code>point/kubernetes/deployment.yml</code>
 
 ```yml
-  resources:
-    requests:
-      memory: "64Mi"
-      cpu: "250m"
-    limits:
-      memory: "500Mi"
-      cpu: "500m"
+          resources:
+            requests:
+              cpu: "200m"  
 ```
 
 - 예약 서비스에 대한 replica 를 동적으로 늘려주도록 HPA 를 설정한다. 설정은 CPU 사용량이 20프로를 넘어서면 replica 를 3개까지 늘려준다:
 
 ```sh
-$ kubectl autoscale deploy booking --min=1 --max=3 --cpu-percent=20
+$ kubectl autoscale deployment point --cpu-percent=20 --min=1 --max=3
 ```
 
-- CB 에서 했던 방식대로 워크로드를 걸어준다.
+- siege를 이용하여 워크로드를 걸어준다.
 
 ```sh
-siege -c20 -t40S -v --content-type "application/json" 'http://localhost:8082/bookings POST {“ccId”:"1", "ccName":"mong", "ccDate:"20210621", “qty”:”2" ,”customerId”:"6007" , "bookingStatus":"success"}'
+siege -c20 -t40S -v http://a5cb5ea9f93da4ef3b97d5048a02b76a-1240042388.ap-northeast-2.elb.amazonaws.com:8080/points
 ```
 
 - 오토스케일이 어떻게 되고 있는지 모니터링을 걸어둔다:
@@ -438,18 +434,21 @@ siege -c20 -t40S -v --content-type "application/json" 'http://localhost:8082/boo
 ```sh
 $ kubectl get deploy booking -w
 ```
+* siege 부하테스트 전
+![pod  정상](https://user-images.githubusercontent.com/82200734/124875364-c59f3080-e003-11eb-8169-afa5c8c64a4f.PNG)
 
-- 어느정도 시간이 흐른 후 스케일 아웃이 벌어지는 것을 확인할 수 있다:
+* siege 부하테스트 후
+![pod늘어남](https://user-images.githubusercontent.com/82200734/124875383-ca63e480-e003-11eb-8214-bdfa432a40b5.PNG)
 
-* siege 부하테스트 - 후 1
+```sh
+$ kubectl get hpa
+```
+* siege 부하테스트 전
+![hpa 부하전](https://user-images.githubusercontent.com/82200734/124875638-1a42ab80-e004-11eb-982d-ccd73f5f744a.PNG)
 
-![hpa](https://user-images.githubusercontent.com/85874443/122758180-76eb5a00-d2d3-11eb-9618-e2005145b0de.PNG)
+* siege 부하테스트 후
+![hpa 늘어나고나서](https://user-images.githubusercontent.com/82200734/124875661-1f9ff600-e004-11eb-9157-98f54f332761.PNG)
 
-
-* siege 부하테스트 - 후 2
-
-
-![scaleout_최종](https://user-images.githubusercontent.com/85874443/122758323-a13d1780-d2d3-11eb-8687-fc39ef7008a5.PNG)
 
 
 ## Circuit Breaker
