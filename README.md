@@ -480,7 +480,7 @@ hystrix:
 
 - 부하 테스트 수행
 ```sh
-$ siege -c20 -t40S -v --content-type "application/json" 'http://localhost:8082/bookings POST {"ccId":1, "ccName":"mong", "ccDate":"20210621", "qty":2 ,"customerId":6007 ,"bookingStatus":"success"}'
+$ siege -c2 -t30S -v --content-type "application/json" 'http://localhost:8085/payments POST {"bookingId":1,"ccId":1,"ccName":"BRAVEGIRLS_1","price":50000,"usedPoint":0,"customerId":1}'
 ```
 
 - fallback 설정
