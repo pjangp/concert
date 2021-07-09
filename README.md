@@ -526,8 +526,8 @@ readinessProbe:
 ## Self-healing (Liveness Probe)
 
 - deployment.yml에 정상 적용되어 있는 livenessProbe  
-Container 실행 후, /tmp/healthy 파일 생성 90초 후, 삭제
-livenessProbe에 'cat /tmp/healthy' 검증도록 함
+  
+  livenessProbe에 'cat /tmp/healthy' 검증도록 함
 
 ```yml
     spec:
