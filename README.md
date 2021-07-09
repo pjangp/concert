@@ -420,7 +420,7 @@ kubectl get deployment metrics-server -n kube-system
               cpu: "200m"  
 ```
 
-- 로인트 서비스에 대한 replica 를 동적으로 늘려주도록 HPA 를 설정한다. 설정은 CPU 사용량이 20프로를 넘어서면 replica 를 3개까지 늘려준다:
+- 포인트 서비스에 대한 replica 를 동적으로 늘려주도록 HPA 를 설정한다. 설정은 CPU 사용량이 20프로를 넘어서면 replica 를 3개까지 늘려준다:
 
 ```sh
 $ kubectl autoscale deployment point --cpu-percent=20 --min=1 --max=3
@@ -438,7 +438,7 @@ siege -c20 -t40S -v http://a5cb5ea9f93da4ef3b97d5048a02b76a-1240042388.ap-northe
 $ kubectl get deploy booking -w
 ```
 
-* siege 부하테스트 후
+* siege 부하테스트 중
 
 ![pod늘어남](https://user-images.githubusercontent.com/82200734/124875383-ca63e480-e003-11eb-8214-bdfa432a40b5.PNG)
 
