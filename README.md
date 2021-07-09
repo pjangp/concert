@@ -107,7 +107,7 @@ mvn spring-boot:run
 
 |과제유형|MSA|기능|port|URL|
 | :--: | :--: | :--: | :--: | :--: |
-|팀과제|concert| 티켓정보 관리 |8081|http://localhost:8081/concerts|
+|팀과제|concert| 콘서트정보 관리 |8081|http://localhost:8081/concerts|
 |팀과제|booking| 티켓예매 관리 |8082|http://localhost:8082/bookings|
 |팀과제|view| 콘서트 예매내역 조회 |8086|http://localhost:8086/mypages|
 |개인과제|payment| 결제 처리 |8085|http://localhost:8085/payments|
