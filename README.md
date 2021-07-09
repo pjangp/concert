@@ -275,7 +275,46 @@ concert, payment 서비스의 DB 를 HSQL 로 설정하여 MSA간 서로 다른 
 
 호출 프로토콜은 Rest Repository 에 의해 노출되어있는 REST 서비스를 FeignClient 를 이용하여 호출하도록 한다.
 
+point 서비스 내 PointController.java 파일 서비스
 
+```java
+@RestController
+ public class PointController {
+    
+    @Autowired
+    PointRepository pointRepository;
+    
+    @RequestMapping(value = "/pointcheck/checkAndDeductPoint",
+        method = RequestMethod.GET,
+        produces = "application/json;charset=UTF-8")
+
+        public boolean checkAndDeductPoint(HttpServletRequest request, HttpServletResponse response)
+        throws Exception {
+                // Parameter로 받은 customerId 추출
+                long customerId = Long.valueOf(request.getParameter("customerId"));
+                Integer usedPoint = Integer.valueOf(request.getParameter("usedPoint"));
+                System.out.println("######################## checkAndDeductPoint customerId : " + customerId);
+                System.out.println("######################## checkAndDeductPoint use Point : " + usedPoint);
+
+                // Point 데이터 조회
+                Optional<Point> res = pointRepository.findById(customerId);
+                Point point = res.get();
+                System.out.println("######################## checkAndDeductPoint Saved Point : " + usedPoint);
+
+                //point 체크
+                boolean result = false;
+                 if(point.getPointTotal() >= usedPoint ) {
+                    point.setPointTotal(point.getPointTotal() - usedPoint);
+                    pointRepository.save(point);
+                        
+                    result = true;
+                 } 
+
+                System.out.println("######################## checkAndDeductPoint Return : " + result);
+                return result;
+        }
+ }
+```
 
 Payment 서비스  내 external.PointService.java 파일
 
@@ -319,46 +358,7 @@ Payment 서비스 내 payment.java 파일
     }
 ```
 
-point 서비스 내 PointController.java 파일 서비스
 
-```java
-@RestController
- public class PointController {
-    
-    @Autowired
-    PointRepository pointRepository;
-    
-    @RequestMapping(value = "/pointcheck/checkAndDeductPoint",
-        method = RequestMethod.GET,
-        produces = "application/json;charset=UTF-8")
-
-        public boolean checkAndDeductPoint(HttpServletRequest request, HttpServletResponse response)
-        throws Exception {
-                // Parameter로 받은 customerId 추출
-                long customerId = Long.valueOf(request.getParameter("customerId"));
-                Integer usedPoint = Integer.valueOf(request.getParameter("usedPoint"));
-                System.out.println("######################## checkAndDeductPoint customerId : " + customerId);
-                System.out.println("######################## checkAndDeductPoint use Point : " + usedPoint);
-
-                // Point 데이터 조회
-                Optional<Point> res = pointRepository.findById(customerId);
-                Point point = res.get();
-                System.out.println("######################## checkAndDeductPoint Saved Point : " + usedPoint);
-
-                //point 체크
-                boolean result = false;
-                 if(point.getPointTotal() >= usedPoint ) {
-                    point.setPointTotal(point.getPointTotal() - usedPoint);
-                    pointRepository.save(point);
-                        
-                    result = true;
-                 } 
-
-                System.out.println("######################## checkAndDeductPoint Return : " + result);
-                return result;
-        }
- }
-```
 
 # 운영
 
