@@ -437,9 +437,6 @@ siege -c20 -t40S -v http://a5cb5ea9f93da4ef3b97d5048a02b76a-1240042388.ap-northe
 ```sh
 $ kubectl get deploy booking -w
 ```
-* siege 부하테스트 전
-
-![pod  정상](https://user-images.githubusercontent.com/82200734/124875364-c59f3080-e003-11eb-8169-afa5c8c64a4f.PNG)
 
 * siege 부하테스트 후
 
