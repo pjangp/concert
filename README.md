@@ -240,7 +240,7 @@ Materialized View 를 구현하여, 타 마이크로서비스의 데이터 원�
 예매(Booked) 실행
 ![예매](https://user-images.githubusercontent.com/82200734/124564704-4b906f80-de7c-11eb-9348-4a82def41198.PNG)
 
-카프카 메시지
+카푸카 메시지
 ![카푸 예매](https://user-images.githubusercontent.com/82200734/124564749-564b0480-de7c-11eb-8999-203d18b8321d.PNG)
 
 예매(Booked) 실행 후 mypage 화면
