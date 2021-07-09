@@ -435,7 +435,7 @@ siege -c20 -t40S -v http://a5cb5ea9f93da4ef3b97d5048a02b76a-1240042388.ap-northe
 - 오토스케일이 어떻게 되고 있는지 모니터링을 걸어둔다:
 
 ```sh
-$ kubectl get deploy booking -w
+$ kubectl get deploy point -w
 ```
 
 * siege 부하테스트 중
